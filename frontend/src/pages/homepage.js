@@ -3,9 +3,16 @@ import 'bootstrap/dist/css/bootstrap.css';
 import { Col, Row, Container, Form, Button } from 'react-bootstrap';
 
 const Body = () => {
-
+    const homepagestyle={  
+        backgroundImage: "url(" + "https://smd-cms.nasa.gov/wp-content/uploads/2023/06/North-star_celestial-pole-1-jpg.webp?w=4096&format=png" + ")",
+        backgroundPosition: 'center',
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        height: '700px'
+        }
     return (
         <>
+        <main style = {homepagestyle}>
             <Row className = {`pt-5`}>
                 <h1 className = {`text-white  text-center`}>Student Result Management System</h1>
 
@@ -37,7 +44,7 @@ const Body = () => {
                 </div>
                 </Row>
             
-
+        </main>
         
         </>
         
