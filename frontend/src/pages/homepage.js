@@ -1,7 +1,7 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import {Row, Form, Button } from 'react-bootstrap';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 
 const Body = () => {
@@ -12,19 +12,38 @@ const Body = () => {
         backgroundRepeat: 'no-repeat',
         height: '700px'
     }
+    const [UserName, setUserName] = useState(() => {
+        const localusername = localStorage.getItem("Home-UserName");
+        return localusername ? JSON.parse(localusername) : "";
+    });
+
+    const [Password, setPassword] = useState(() => {
+        const localPassword = localStorage.getItem("Home-UserPassword");
+        return localPassword ? JSON.parse(localPassword) : "";
+    });
     const [login, setlogin] = useState(false);
     //fasle - teacherhomepage, true - studenthomepage
     const [InnerHome, setInnerHome] = useState(null);
 
+    useEffect(() => {
+        console.log("Setting Home-UserName:", UserName);
+        localStorage.setItem("Home-UserName", JSON.stringify(UserName));
+        document.getElementById("Home-name").value = JSON.parse(localStorage.getItem("Home-UserName")) || "";
+
+    }, [UserName])
+
+    useEffect(() => {
+        localStorage.setItem("Home-UserPassword", JSON.stringify(Password)); 
+        document.getElementById("Home-password").value = JSON.parse(localStorage.getItem("Home-UserPassword")) || "";
+    }, [Password])
 
     if (login && !InnerHome) {
-            return <Navigate to="/teacher_home" />;
+        return <Navigate to="/teacher_home" />;
     }
-    if (login && !InnerHome) {
-        return <Navigate to="/student_home" />;
+    if (login && InnerHome) {
+       return <Navigate to="/student_home" />;
     }
-
-
+    
     return (
         <>
         <main style = {homepagestyle}>
@@ -48,8 +67,20 @@ const Body = () => {
                                 <option value = "Student">Student</option>
                             </select></p>
 
-                        <p><input type="text" placeholder='Name' className = {`form-control`}></input></p>
-                        <p><input type="text" placeholder='Password'className = {`form-control`}></input></p>
+                                <p><input type="text" placeholder='Name' className={`form-control`}  id = "Home-name" onChange={
+                                    (event) => {
+                                        setUserName(event.target.value);
+                                        localStorage.setItem("Home-UserName", JSON.stringify(event.target.value));
+                                    }
+                                } >
+                                </input></p>
+                                <p><input type="text" placeholder='Password' id = "Home-password" className={`form-control`} onChange={
+                                    (event) => {
+                                        setPassword(event.target.value);
+                                        localStorage.setItem("Home-UserPassword", JSON.stringify(event.target.value));
+
+                                    }
+                        }></input></p>
 
                         <div className={`d-grid gap-2`}>
                                     <Button href="#" className={`btn-primary pr-5`} onClick={() => {

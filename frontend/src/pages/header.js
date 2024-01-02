@@ -9,7 +9,7 @@ const Head = () => {
         <>
         <header>
             <div className={`container-fluid bg-secondary pb-3 text-white display-6 bg-opacity-25`}>
-                <Row className = {`offset-8`}>
+                <Row>
                 <Nav bsStyle = "fluid" activeKey={1} className = {`justify-content-end`}> 
                         <Nav.Item eventKey={1} className={`pt-2`}>
                             <Nav.Link href="/teacher_home" className = {'text-white'}>Home</Nav.Link>
@@ -19,7 +19,7 @@ const Head = () => {
                            <NavDropdown.Item eventKey={2.1} href="/Input">Input</NavDropdown.Item>
                            <NavDropdown.Item  eventKey={2.2} href="">Grade</NavDropdown.Item>
                            <NavDropdown.Item  eventKey={2.3}>Setting</NavDropdown.Item>
-                          <NavDropdown.Item eventKey={2.4}>Log Out</NavDropdown.Item>        
+                          <NavDropdown.Item eventKey={2.4} href = "/">Log Out</NavDropdown.Item>        
                         </NavDropdown>    
                        
                </Nav>  
