@@ -2,7 +2,7 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import Head from './header.js';
 import { useState,useEffect} from 'react';
-import { Button, Row } from 'react-bootstrap';
+import { Button} from 'react-bootstrap';
 import { FaTrashAlt } from 'react-icons/fa';
 
 const Teacher_input = () => {
@@ -17,7 +17,7 @@ const Teacher_input = () => {
     const [Courses, setCourses] = useState([
         {
             id: 1,
-            checked: true,
+            checked: false,
             courseName: "CMPT120",
             semester: "Fall",
             year:2022
@@ -25,7 +25,7 @@ const Teacher_input = () => {
         },
         {
             id: 2,
-            checked: true,
+            checked: false,
             courseName: "CMPT130",
             semester: "Fall",
             year:2022
@@ -33,7 +33,7 @@ const Teacher_input = () => {
         },
         {
             id: 3,
-            checked: true,
+            checked: false,
             courseName: "CMPT125",
             semester: "Fall",
             year:2022
@@ -41,7 +41,7 @@ const Teacher_input = () => {
         },
         {
             id: 4,
-            checked: true,
+            checked: false,
             courseName: "CMPT125",
             semester: "Fall",
             year:2022
@@ -49,15 +49,48 @@ const Teacher_input = () => {
         }
     ]);
 
+    const handleCourse = (course) => {
+        const CourseList = Courses.filter((c) => {
+            return c.courseName === course.courseName && c.semester === course.semester && c.year === course.year;
+        })
+        if (!CourseList) {
+            const courselist = [...Courses, course];
+            setCourses(courselist);
+        }
+    }
+
+    const addCourse = (event) => {
+        event.preventDefault();
+        const id = Courses.length + 1;
+        const newCourse = {
+            id: id,
+            checked: false,
+            courseName: event.target.courseName.value,
+            semester: event.target.semester.value,
+            year: event.target.year.value
+        };
+        handleCourse(newCourse);   
+    }
+
     return (
         <>
             <main style = {homepagestyle}>
                 <Head />
                 
                 <form className={`text-center`}>
-                    <input type="text" placeholder='course name' className='px-4 py-1  me-3 mt-4 rounded-2'></input>
-                    <Button className='mb-1'>Add</Button>
+                <select name = "semester" className= "m-2">
+                        <option value="Fall">Fall</option>
+                        <option value="Spring">Spring</option>
+                        <option value = "Summer">Summer</option>
+                </select>
+                    <input type="text" name = "courseName" placeholder='Course Name' className='px-4 py-1  me-2 mt-4 rounded-2'></input>
+                    <input type="number" name = "year" placeholder='Year' className='px-4 py-1  me-3 mt-4 rounded-2'></input>
+                    <Button className='mb-1' onClick = {addCourse} >Add</Button>
                 </form>
+                {/* <form className={`text-center`}>
+                    <input type="text" placeholder='search courses' className='px-4 py-1  me-3 mt-4 rounded-2'></input>
+                    <Button className='mb-1'>Search</Button>
+                </form> */}
                 {(Courses.length) ? (<div className="border border-secondary border-3 text-center display-6 rounded-3 mx-5 mt-3" >
                     
                     <ul className= {`text-white`} 
@@ -75,7 +108,7 @@ const Teacher_input = () => {
                     ))}
 
                     </ul>
-                </div>) : <p>No course</p>}
+                </div>) : <p>Your lists are empty</p>}
 
             </main>
 
@@ -83,8 +116,7 @@ const Teacher_input = () => {
                 <div className={`bg-secondary container-fluid pb-4 bg-opacity-25`}>
                    <p>Insert {Courses.length} items</p>
                 </div>
-            </footer>
-            
+            </footer> 
         </>
     );
 }
