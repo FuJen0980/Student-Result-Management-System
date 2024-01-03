@@ -2,8 +2,8 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import Head from './header.js';
 import { useState,useEffect} from 'react';
-import { Button} from 'react-bootstrap';
 import { FaTrashAlt } from 'react-icons/fa';
+import Alert from 'react-bootstrap/Alert';
 
 const Teacher_input = () => {
     const homepagestyle = {
@@ -49,48 +49,111 @@ const Teacher_input = () => {
         }
     ]);
 
+    useEffect(() => {
+
+        setCourses((prevCourses) => {
+            const CoursesList = [...prevCourses];
+            CoursesList.sort((a, b) => {
+                if (a.year !== b.year)
+                    return b.year - a.year;
+                
+                return b.semester - a.semester;
+            });
+            return CoursesList;
+        })
+
+    }, [Courses])
+    
+    const showAlert = (alertElem, word) => {
+        alertElem.innerHTML = `${word} not exit —check it out!`;
+        alertElem.style.display = 'block';
+    }
+
     const handleCourse = (course) => {
-        const CourseList = Courses.filter((c) => {
+
+        const alertElem = document.getElementById("alert");
+
+        if (!Courses.some((a) => {
+            return a.courseName === course.courseName;
+        })) {
+            showAlert(alertElem,"Course");
+
+            return;
+        }
+        if (course.year < 999) {
+            showAlert(alertElem,"Year");
+            return;
+        }
+
+        const checkExit = Courses.some((c) => {
             return c.courseName === course.courseName && c.semester === course.semester && c.year === course.year;
         })
-        if (!CourseList) {
-            const courselist = [...Courses, course];
-            setCourses(courselist);
+        if (!checkExit) {
+            const courseList = [...Courses, course];
+            setCourses(courseList);
+            
+            
         }
     }
 
     const addCourse = (event) => {
         event.preventDefault();
+        document.getElementById("alert").style.display = "none";
         const id = Courses.length + 1;
+        const { courseName, semester, year } = event.target;
         const newCourse = {
-            id: id,
-            checked: false,
-            courseName: event.target.courseName.value,
-            semester: event.target.semester.value,
-            year: event.target.year.value
-        };
-        handleCourse(newCourse);   
-    }
+            id, checked: false,
+            courseName: courseName.value,
+            semester: semester.value,
+            year: year.value,
+        }
+        handleCourse(newCourse);
+        document.getElementById("teacherInput").reset();
+        console.log(Courses);
+    };
+
+    const [options, setoptions] = useState([
+        'CMPT120',
+        'CMPT125',
+        'CMPT225',
+        'CMPT272',
+        'CMPT295',
+        'CMPT276',
+        'CMPT300',
+        'CMPT354',
+        'CMPT353',
+        'MATH150',
+        'MATH151',
+        'MATH152',
+        'MATH232',
+        'MATH240',
+        'MACM101',
+        'MACM201',
+        'MACM316',
+    ])
 
     return (
         <>
             <main style = {homepagestyle}>
                 <Head />
                 
-                <form className={`text-center`}>
+                <form className={`text-center`} onSubmit ={addCourse} id = "teacherInput">
                 <select name = "semester" className= "m-2">
                         <option value="Fall">Fall</option>
                         <option value="Spring">Spring</option>
                         <option value = "Summer">Summer</option>
-                </select>
-                    <input type="text" name = "courseName" placeholder='Course Name' className='px-4 py-1  me-2 mt-4 rounded-2'></input>
+                 </select>
+                <input placeholder = "course name" list = "courseList" name = "courseName" className='px-4 py-1  me-2 mt-4 rounded-2'></input> 
+                <datalist id = "courseList" placeholder='Course Name'>
+                    {options.map((option,index) => (
+                        <option key={index} value={option}></option>
+                    ))}
+                </datalist>
                     <input type="number" name = "year" placeholder='Year' className='px-4 py-1  me-3 mt-4 rounded-2'></input>
-                    <Button className='mb-1' onClick = {addCourse} >Add</Button>
+                    <input type = "submit" value = "add" className='btn btn-primary md-1'></input>
                 </form>
-                {/* <form className={`text-center`}>
-                    <input type="text" placeholder='search courses' className='px-4 py-1  me-3 mt-4 rounded-2'></input>
-                    <Button className='mb-1'>Search</Button>
-                </form> */}
+                <Alert id = "alert" variant='danger' style = {{display:'none'}}>Courses not exit —check it out!</Alert>
+
                 {(Courses.length) ? (<div className="border border-secondary border-3 text-center display-6 rounded-3 mx-5 mt-3" >
                     
                     <ul className= {`text-white`} 
