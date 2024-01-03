@@ -42,4 +42,5 @@ public class UserController {
     public void deleteAllUsers() {
         userRepo.deleteAll();
     }
+
 }

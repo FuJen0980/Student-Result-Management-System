@@ -10,7 +10,9 @@ const LoginPage = () => {
         backgroundPosition: 'center',
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
-        height: '700px'
+        width: '100%',
+        height: '100vh',
+        overflow: 'hidden',
     }
     const [UserName, setUserName] = useState(() => {
         const localusername = localStorage.getItem("Home-UserName");

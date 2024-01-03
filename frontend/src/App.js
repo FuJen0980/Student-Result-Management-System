@@ -6,12 +6,14 @@ import UserListPage from './pages/UserListPage';
 import TeacherHomePage from './pages/TeacherHomePage';
 import TeacherInputPage from './pages/TeacherInputPage';
 import TeacherCurvePage from './pages/TeacherCurvePage';
+import TestPage from './pages/LoginPageTest';
 
 function App() {
   return (
     <>    
       <div>
         <Routes>
+          <Route path="/test" element={<TestPage />} />
           <Route path="/" element={<LoginPage />} />
           <Route path="/users" element={<UserListPage />} />
           <Route path="/teacher/home" element={<TeacherHomePage />} />
