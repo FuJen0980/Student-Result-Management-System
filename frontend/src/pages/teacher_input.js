@@ -17,7 +17,6 @@ const Teacher_input = () => {
     const [Courses, setCourses] = useState([
         {
             id: 1,
-            checked: false,
             courseName: "CMPT120",
             semester: "Fall",
             year:2022
@@ -25,7 +24,6 @@ const Teacher_input = () => {
         },
         {
             id: 2,
-            checked: false,
             courseName: "CMPT130",
             semester: "Fall",
             year:2022
@@ -33,7 +31,6 @@ const Teacher_input = () => {
         },
         {
             id: 3,
-            checked: false,
             courseName: "CMPT125",
             semester: "Fall",
             year:2022
@@ -41,7 +38,6 @@ const Teacher_input = () => {
         },
         {
             id: 4,
-            checked: false,
             courseName: "CMPT125",
             semester: "Fall",
             year:2022
@@ -91,8 +87,7 @@ const Teacher_input = () => {
         if (!checkExit) {
             const courseList = [...Courses, course];
             setCourses(courseList);
-            
-            
+ 
         }
     }
 
@@ -111,6 +106,14 @@ const Teacher_input = () => {
         document.getElementById("teacherInput").reset();
         console.log(Courses);
     };
+
+    const deleteCourse = (id) => {
+        const courseList = Courses.filter((course) => {
+            return course.id !== id;
+        })
+        setCourses(courseList);
+    }
+
 
     const [options, setoptions] = useState([
         'CMPT120',
@@ -160,18 +163,18 @@ const Teacher_input = () => {
                     style = {{listStyleType: 'none',maxHeight: '400px',overflowY: 'auto'}}>
                     {Courses.map((course) => (
                         <li className="course" key={course.id} >
-                            <input type="checkbox" checked={course.checked} className = "me-3"/>
+                            {/* <input type="checkbox" checked={course.checked} className = "me-3"/> */}
                             <label onMouseOver={(event) => {
                                 event.target.style.backgroundColor = 'grey';
                             }} onMouseOut={(event) => {
                                 event.target.style.backgroundColor = '';
                             }}>{course.courseName}, {course.semester}, {course.year}</label>
-                            <FaTrashAlt role="button" tabIndex="0" className = "ms-3"/>
+                            <FaTrashAlt role="button" tabIndex="0" className="ms-3" onClick={()=>deleteCourse(course.id)}/>
                         </li>
                     ))}
 
                     </ul>
-                </div>) : <p>Your lists are empty</p>}
+                </div>) : <p className = "text-white text-center pt-5">Your lists are empty</p>}
 
             </main>
 
