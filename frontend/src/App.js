@@ -1,25 +1,23 @@
-import {Routes, Route } from 'react-router-dom';
-import Body from './pages/homepage';
-import UserListPage from './pages/UserListPage';
+import { Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.css';
-import Teacher_home from './pages/Teacher_homepage';
-import Teacher_input from './pages/teacher_input';
-import Teacher_curve from './pages/Teacher_curve';
+
+import LoginPage from './pages/LoginPage';
+import UserListPage from './pages/UserListPage';
+import TeacherHomePage from './pages/TeacherHomePage';
+import TeacherInputPage from './pages/TeacherInputPage';
+import TeacherCurvePage from './pages/TeacherCurvePage';
 
 function App() {
   return (
     <>    
       <div>
         <Routes>
-      
+          <Route path="/" element={<LoginPage />} />
           <Route path="/users" element={<UserListPage />} />
-          <Route path="/" element={<Body />} />
-          <Route path="/teacher_home" element={<Teacher_home />} />
-          <Route path="/teacher_input" element={<Teacher_input />} />
-          <Route path="/teacher_curve" element={<Teacher_curve/>} />
-            
+          <Route path="/teacher/home" element={<TeacherHomePage />} />
+          <Route path="/teacher/input" element={<TeacherInputPage />} />
+          <Route path="/teacher/curve" element={<TeacherCurvePage/>} />
         </Routes>
-
       </div>
     </>
   );
