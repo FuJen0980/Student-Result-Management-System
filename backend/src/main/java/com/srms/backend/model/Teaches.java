@@ -61,4 +61,9 @@ public class Teaches {
         return this.courses.stream().map(course -> course.getCourseName()).toList();
     }
 
+    public String getTeacherName() {
+        return this.user.getName();
+        
+    }
+
 }
