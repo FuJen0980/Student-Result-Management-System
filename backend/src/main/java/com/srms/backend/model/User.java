@@ -1,6 +1,7 @@
 package com.srms.backend.model;
 
 import jakarta.persistence.*;
+import java.util.List;
 
 
 @Entity
@@ -9,9 +10,18 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int uid;
+
+    @Column(nullable = false)
     private String role;
+    
     private String name;
     private String password;
+
+    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
+    private List<Teaches> teaches;
+
+    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
+    private List<Taken> takens;
 
     public User() {
     }
