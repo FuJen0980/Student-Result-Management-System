@@ -2,7 +2,8 @@ import { Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.css';
 
 import LoginPage from './pages/LoginPage';
-import UserListPage from './pages/UserListPage';
+import RegisterPage from './pages/RegisterPage';
+
 import TeacherHomePage from './pages/TeacherHomePage';
 import TeacherInputPage from './pages/TeacherInputPage';
 import TeacherCurvePage from './pages/TeacherCurvePage';
@@ -15,7 +16,8 @@ function App() {
         <Routes>
           <Route path="/test" element={<TestPage />} />
           <Route path="/" element={<LoginPage />} />
-          <Route path="/users" element={<UserListPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+
           <Route path="/teacher/home" element={<TeacherHomePage />} />
           <Route path="/teacher/input" element={<TeacherInputPage />} />
           <Route path="/teacher/curve" element={<TeacherCurvePage/>} />
