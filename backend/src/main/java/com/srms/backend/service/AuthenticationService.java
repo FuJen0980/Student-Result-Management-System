@@ -25,9 +25,6 @@ public class AuthenticationService {
     public AuthenticationResponse register(RegisterRequest request) {
         String roleString = request.getRole();
         Role role = Role.valueOf(roleString.toUpperCase());
-        if(role == null) {
-            role = Role.STUDENT;
-        }
         var user = User.builder()
             .name(request.getName())
             .password(passwordEncoder.encode(request.getPassword()))
