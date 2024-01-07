@@ -9,10 +9,8 @@ import com.srms.backend.model.Course;
 import com.srms.backend.model.User;
 
 public interface TeachesRepository extends JpaRepository<Teaches, Integer> {
-    // List<Teaches> findByUserIn(List<User> users);
-    // List<Course> findByTeachesIn(List<Teaches> teachesList);
-    List<Teaches> findBySemesterAndYear(String semester, int year);
-    Teaches findBySemesterAndYearAndUser(String semester, int year, User user);
+    List<Teaches> findByUserIn(List<User> users);
+    List<Teaches> findBySemesterAndTeachYear(String semester, int teachYear);
     void deleteById(Integer teachesId);
 
 }

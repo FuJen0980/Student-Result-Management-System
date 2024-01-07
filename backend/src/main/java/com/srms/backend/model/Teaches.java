@@ -25,7 +25,7 @@ public class Teaches {
     @JoinColumn(name = "uid")
     private User user;
     
-    @OneToMany(mappedBy = "teaches", cascade = CascadeType.ALL , fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "teaches", cascade = CascadeType.ALL)
     private List<Course> courses;
 
     @PrePersist

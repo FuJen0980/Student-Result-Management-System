@@ -31,15 +31,15 @@ public class TeachesController {
 
     }
 
-    // @PostMapping
-    // public void addTeaches(@RequestBody Teaches teaches) {
-    //     teachesRepository.save(teaches);
-    // }
+    @PostMapping
+    public void addTeaches(@RequestBody Teaches teaches) {
+        teachesRepository.save(teaches);
+    }
 
-    // @DeleteMapping("/{teachesId}")
-    // public void deleteTeaches(@PathVariable Integer teachesId){
-    //     teachesRepository.deleteById(teachesId);
+    @DeleteMapping("/{teachesId}")
+    public void deleteTeaches(@PathVariable Integer teachesId){
+        teachesRepository.deleteById(teachesId);
 
-    // }
+    }
 
 }
