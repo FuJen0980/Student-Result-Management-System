@@ -12,6 +12,9 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import axios from 'axios';
+import { jwtDecode } from "jwt-decode";
+import { useNavigate } from 'react-router-dom';
 
 function Copyright(props) {
   return (
@@ -31,15 +34,44 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignInSide() {
-  const handleSubmit = (event) => {
+  const Navigate = useNavigate();
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      role: data.get('role'),
+  
+    const requestBody = {
       name: data.get('name'),
-      password: data.get('password'),
-    });
+      password: data.get('password')
+    };
+  
+    try {
+      const response = await axios.post('http://localhost:8080/api/auth/authenticate', requestBody);
+      console.log('Authentication successful. Token:', response.data.token);
+      const token = response.data.token;
+      localStorage.setItem("token", token);
+
+      const decoded = jwtDecode(token)
+      const userRole = decoded.roles[0];
+      console.log(userRole);
+      switch(userRole) {
+        case "ADMIN":
+          Navigate("/teacher/home");
+          break;
+        case "STUDENT":
+          Navigate("/student/home");
+          break;
+        case "TEACHER":
+          Navigate("/teacher/home");
+          break;
+        default:
+          Navigate("/test");
+          break;
+      }
+    } catch (error) {
+      console.log('Authentication failed. Error:', error);
+    }
   };
+  
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -76,22 +108,6 @@ export default function SignInSide() {
               Sign in
             </Typography>
             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
-            <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="role"
-                label="Role"
-                name="role"
-                select
-                SelectProps={{
-                  native: true,
-                }}
-              >
-                <option value="Admin">Teacher</option>
-                <option value="User">Student</option>
-              </TextField>
-
               <TextField
                 margin="normal"
                 required

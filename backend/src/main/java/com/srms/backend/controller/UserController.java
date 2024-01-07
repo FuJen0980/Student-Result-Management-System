@@ -21,7 +21,7 @@ public class UserController {
     private UserRepository userRepository;
 
     @GetMapping("/role/{name}") 
-    public ResponseEntity<Object> getRole(@PathVariable String name) {
+    public ResponseEntity<Object> getUser(@PathVariable String name) {
         try {
             return ResponseEntity.ok(userRepository.findByName(name));
         } catch (Exception e) {
