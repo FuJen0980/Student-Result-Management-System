@@ -1,8 +1,10 @@
 package com.srms.backend.model;
 
 import jakarta.persistence.*;
-import java.util.List;
+
 import java.util.ArrayList;
+import java.util.List;
+
 
 
 @Entity
@@ -10,19 +12,20 @@ import java.util.ArrayList;
 public class Teaches {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(updatable = false)
     private Integer teachesId;
 
     @Column(nullable = false)
     private String semester;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "integer")
     private Integer teachYear;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "uid")
     private User user;
     
-    @OneToMany(mappedBy = "teaches", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "teaches", cascade = CascadeType.ALL , fetch = FetchType.LAZY)
     private List<Course> courses;
 
     @PrePersist
@@ -33,7 +36,7 @@ public class Teaches {
     }
 
     public Teaches() {
-        this.courses = new ArrayList<>();   
+        this.courses = new ArrayList<Course>();   
     }
     
     public Teaches(String semester, Integer teachYear) {
@@ -63,7 +66,7 @@ public class Teaches {
 
     public String getTeacherName() {
         return this.user.getName();
-        
+
     }
 
 }

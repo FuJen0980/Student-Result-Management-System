@@ -17,11 +17,11 @@ public class User {
     private String name;
     private String password;
 
-    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Teaches> teaches;
 
-    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
-    private List<Taken> takens;
+    // @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
+    // private List<Taken> takens;
 
     public User() {
     }
