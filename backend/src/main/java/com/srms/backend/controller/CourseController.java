@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.srms.backend.model.Course;
 import com.srms.backend.repository.CourseRepository;
+import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,19 +28,35 @@ public class CourseController {
     private CourseRepository courseRepository;
 
     @GetMapping
-    public List<Course> getAllCourses() {
-        return courseRepository.findAll();
+    public ResponseEntity<Object> getAllCourses() {
+        try {
+            return ResponseEntity.ok(courseRepository.findAll());
+        } catch (Exception error) {
+            return ResponseEntity.badRequest().body("Error");
+        }
     }
 
     @PostMapping
-    public void addCourse(@RequestBody Course course) {
-        courseRepository.save(course);
+    public ResponseEntity<Object> addCourse(@RequestBody Course course) {
+        try {
+            Course savedCourse = courseRepository.save(course);
+            return ResponseEntity.ok("Course saved with ID: " + savedCourse.getId());
 
+        } catch (Exception error) {
+            return ResponseEntity.badRequest().body("Error");
+        }
+        
     }
-    
+ 
     @DeleteMapping("/{courseId}")
-    public void deleteCourse(@PathVariable Integer course_id) {
-        courseRepository.deleteById(course_id);
+    public ResponseEntity<Object> deleteCourse(@PathVariable int courseId) {
+        try{
+           courseRepository.deleteById(courseId);
+           return ResponseEntity.ok("Course deleted");
+       } catch (Exception error) {
+           return ResponseEntity.badRequest().body("Error");
+        }
     }
+
     
 }

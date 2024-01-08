@@ -2,10 +2,10 @@ package com.srms.backend.model;
 
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
-
+// import org.assertj.core.util.Objects;
 
 @Entity
 @Table(name = "teaches")
@@ -24,26 +24,28 @@ public class Teaches {
     @ManyToOne
     @JoinColumn(name = "uid")
     private User user;
-    
-    @OneToMany(mappedBy = "teaches", cascade = CascadeType.ALL , fetch = FetchType.LAZY)
-    private List<Course> courses;
+
+    @ManyToMany
+    @JoinTable(name = "teaches_course", 
+            joinColumns = @JoinColumn(name = "teachesId"), 
+            inverseJoinColumns = @JoinColumn(name = "course_id"))
+    private Set<Course> courses;
 
     @PrePersist
     public void keepTeacherRole() {
-        if (user != null && !user.getRole().equalsIgnoreCase("teacher")) {
+        if (user != null && !"TEACHER".equals(user.getRole())) {
             throw new IllegalStateException("User must be a teacher");
         }
     }
 
     public Teaches() {
-        this.courses = new ArrayList<Course>();   
     }
-    
+
     public Teaches(String semester, Integer teachYear) {
         this.semester = semester;
         this.teachYear = teachYear;
     }
-    
+
     public void setTeachSemester(String semester) {
         this.semester = semester;
     }
@@ -69,4 +71,20 @@ public class Teaches {
 
     }
 
+    public List<Course> getCourses(){
+        return this.courses.stream().toList();
+    }
+
+    // public void addCourse(Course course) {
+    //     courses.add(course);
+    //     course.setTeaches(this);
+
+    // }
+
+    // public void deleteCourse(Course course) {
+    //     courses.remove(course);
+    //     course.setTeaches(null);
+    // }
+
+    
 }

@@ -2,6 +2,7 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import {Button,Row} from 'react-bootstrap';
 import TeacherHeader from '../components/TeacherHeader.js';
+import { useNavigate } from 'react-router-dom';
 
 const Teacher_home = () => {
     const homepagestyle = {
@@ -12,7 +13,15 @@ const Teacher_home = () => {
         height: '700px'
     }
     const user = "gkfslsdjf;dfja;";
-    
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+      // Remove JWT token from local storage
+      localStorage.removeItem("token");
+  
+      // Redirect to the login page
+      navigate('/');
+    };
     return (
         
         <>
@@ -30,6 +39,7 @@ const Teacher_home = () => {
                     <Button className = {`btn-primary`} size = 'lg' href = '/teacher/curve'>Grade</Button>
                     </div>
                 </Row>
+                <Button onClick={handleLogout}>Log-Out</Button>
 
             </main>
             

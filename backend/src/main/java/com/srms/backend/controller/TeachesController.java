@@ -1,9 +1,13 @@
 package com.srms.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 
 import com.srms.backend.model.Teaches;
+import com.srms.backend.model.Course;
+
 import com.srms.backend.repository.TeachesRepository;
+import com.srms.backend.repository.CourseRepository;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,30 +20,50 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-
-@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/teaches")
+@CrossOrigin("*")
 public class TeachesController {
     
     @Autowired
     private TeachesRepository teachesRepository;
 
-    @GetMapping
-    public List<Teaches> getAllTeaches() {
-        return teachesRepository.findAll();
+    @Autowired
+    private CourseRepository courseRepository;
 
+    @GetMapping
+    public ResponseEntity<Object> getAllTeaches() {
+        try {
+            return ResponseEntity.ok(teachesRepository.findAll());
+        } catch (Exception error) {
+            return ResponseEntity.badRequest().body("Error");
+        }
+    }
+    
+    @PostMapping
+    public ResponseEntity<Object> addTeaches(@RequestBody Teaches teaches) {
+        try {
+            teachesRepository.save(teaches);
+            for(Course course: teaches.getCourses()){
+                course.addTeaches(teaches);
+                courseRepository.save(course);
+            }
+            return ResponseEntity.ok("Teaches saved");
+
+        } catch (Exception error) {
+            return ResponseEntity.badRequest().body("Error");
+        }
+        
     }
 
-    // @PostMapping
-    // public void addTeaches(@RequestBody Teaches teaches) {
-    //     teachesRepository.save(teaches);
-    // }
-
-    // @DeleteMapping("/{teachesId}")
-    // public void deleteTeaches(@PathVariable Integer teachesId){
-    //     teachesRepository.deleteById(teachesId);
-
-    // }
-
+    @DeleteMapping("/{teachesId}")
+    public ResponseEntity<Object> deleteTeaches(@PathVariable int teachesId) {
+        try{
+           teachesRepository.deleteById(teachesId);
+           return ResponseEntity.ok("Teaches deleted");
+       } catch (Exception error) {
+           return ResponseEntity.badRequest().body("Error");
+        }
+    }
+   
 }

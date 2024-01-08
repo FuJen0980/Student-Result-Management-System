@@ -1,5 +1,4 @@
 package com.srms.backend.model;
-import com.srms.backend.model.Teaches;
 
 import jakarta.persistence.*;
 import java.util.List;
@@ -12,11 +11,10 @@ public class Course{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer course_id;
 
-    private String course_name;
+    private String courseName;
 
-    @ManyToOne
-    @JoinColumn(name = "teachesId")
-    private Teaches teaches;
+    @ManyToMany(mappedBy = "courses")
+    private List<Teaches> teaches;
     
     //miss a relationship with the studentTaken table 
 
@@ -24,16 +22,24 @@ public class Course{
     }
 
     public Course(String name) {
-        this.course_name = name;
+        this.courseName = name;
     }
 
     public void setCourseName(String name) {
-        this.course_name = name;
+        this.courseName = name;
     }
 
     public String getCourseName() {
-        return this.course_name;
+        return this.courseName;
     }
     
+    public Integer getId() {
+        return this.course_id;
+    }
+    
+    public void addTeaches(Teaches teaches) {
+        this.teaches.add(teaches);
+    }
+
 
 }
