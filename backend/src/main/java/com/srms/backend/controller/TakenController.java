@@ -7,8 +7,7 @@ import com.srms.backend.model.*;
 
 
 
-import com.srms.backend.repository.TeachesRepository;
-import com.srms.backend.repository.CourseRepository;
+import com.srms.backend.repository.TakenRepository;
 import com.srms.backend.repository.UserRepository;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -21,16 +20,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/teaches")
+@RequestMapping("/api/taken")
 @CrossOrigin("*")
-public class TeachesController {
+public class TakenController {
     
     @Autowired
-    private TeachesRepository teachesRepository;
+    private TakenRepository takenRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -38,25 +36,25 @@ public class TeachesController {
     @GetMapping
     public ResponseEntity<Object> getAllTeaches() {
         try {
-            return ResponseEntity.ok(teachesRepository.findAll());
+            return ResponseEntity.ok(takenRepository.findAll());
         } catch (Exception error) {
             return ResponseEntity.badRequest().body("Error");
         }
     }
     
     @PostMapping
-    public ResponseEntity<Object> addTeaches(@RequestBody Teaches teaches, @RequestParam Integer teacherId) {
+    public ResponseEntity<Object> addTeaches(@RequestBody Taken taken, @RequestParam Integer studentrId) {
         try {
 
-            User teacher = userRepository.findById(teacherId).orElse(null);
-            if (teacher == null) {
+            User student = userRepository.findById(studentrId).orElse(null);
+            if (student == null) {
                 return ResponseEntity.badRequest().body("Teacher not found");
             }
-            teacher.addTeaches(teaches);
-            userRepository.save(teacher);
-            teachesRepository.save(teaches);
+            student.addTaken(taken);
+            userRepository.save(student);
+            takenRepository.save(taken);
 
-            return ResponseEntity.ok("Teaches saved");
+            return ResponseEntity.ok("Taken saved");
 
         } catch (Exception error) {
             return ResponseEntity.badRequest().body("Error");
@@ -64,19 +62,19 @@ public class TeachesController {
 
     }
 
-    @DeleteMapping("/{teachesId}")
-    public ResponseEntity<Object> deleteTeaches(@PathVariable int teachesId,@RequestParam Integer teacherId) {
+    @DeleteMapping("/{taken_Id}")
+    public ResponseEntity<Object> deleteTeaches(@PathVariable int takenId,@RequestParam Integer studentId) {
         try {
-            User teacher = userRepository.findById(teacherId).orElse(null);
-            if (teacher != null) {
-                Optional<Teaches> teachesOptional = teachesRepository.findById(teachesId);
-                teacher.deleteTeaches(teachesOptional);
-                userRepository.save(teacher);
+            User student = userRepository.findById(studentId).orElse(null);
+            if (student != null) {
+                Optional<Taken> takenOptional = takenRepository.findById(takenId);
+                student.deleteTaken(takenOptional);
+                userRepository.save(student);
             }
 
-            teachesRepository.deleteById(teachesId);
-            
-           return ResponseEntity.ok("Teaches deleted");
+            takenRepository.deleteById(takenId);
+            return ResponseEntity.ok("Taken deleted");
+           
        } catch (Exception error) {
            return ResponseEntity.badRequest().body("Error");
         }

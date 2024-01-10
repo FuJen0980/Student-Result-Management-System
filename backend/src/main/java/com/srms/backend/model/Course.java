@@ -2,9 +2,12 @@ package com.srms.backend.model;
 
 import jakarta.persistence.*;
 import java.util.List;
+import lombok.Builder;
+import lombok.Data;
 
 
 @Entity
+@Data
 @Table(name = "course")
 public class Course{
     @Id
@@ -13,9 +16,6 @@ public class Course{
 
     private String courseName;
 
-    @ManyToMany(mappedBy = "courses")
-    private List<Teaches> teaches;
-    
     //miss a relationship with the studentTaken table 
 
     public Course() {
@@ -36,10 +36,12 @@ public class Course{
     public Integer getId() {
         return this.course_id;
     }
-    
-    public void addTeaches(Teaches teaches) {
-        this.teaches.add(teaches);
+
+    @Builder
+    public Course(Integer course_id, String courseName) {
+        this.course_id = course_id;
+        this.courseName = courseName;
     }
 
-
+    
 }

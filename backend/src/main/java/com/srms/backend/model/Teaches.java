@@ -1,14 +1,18 @@
 package com.srms.backend.model;
 
 import jakarta.persistence.*;
-
+import lombok.Builder;
+import lombok.Data;
 import java.util.List;
 import java.util.Set;
+
+import javax.xml.crypto.dsig.keyinfo.RetrievalMethod;
 
 // import org.assertj.core.util.Objects;
 
 @Entity
 @Table(name = "teaches")
+@Data
 public class Teaches {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,22 +25,11 @@ public class Teaches {
     @Column(nullable = false, columnDefinition = "integer")
     private Integer teachYear;
 
-    @ManyToOne
-    @JoinColumn(name = "uid")
-    private User user;
-
     @ManyToMany
     @JoinTable(name = "teaches_course", 
             joinColumns = @JoinColumn(name = "teachesId"), 
             inverseJoinColumns = @JoinColumn(name = "course_id"))
     private Set<Course> courses;
-
-    @PrePersist
-    public void keepTeacherRole() {
-        if (user != null && !"TEACHER".equals(user.getRole())) {
-            throw new IllegalStateException("User must be a teacher");
-        }
-    }
 
     public Teaches() {
     }
@@ -62,29 +55,12 @@ public class Teaches {
         return this.teachYear;
     }
 
-    public List<String> getAllCourses() {
-        return this.courses.stream().map(course -> course.getCourseName()).toList();
+    @Builder
+    public Teaches(Integer teachesId, String semester, Integer teachYear, Set<Course> courses) {
+        this.teachesId = teachesId;
+        this.semester = semester;
+        this.teachYear = teachYear;
+        this.courses = courses;
     }
-
-    public String getTeacherName() {
-        return this.user.getName();
-
-    }
-
-    public List<Course> getCourses(){
-        return this.courses.stream().toList();
-    }
-
-    // public void addCourse(Course course) {
-    //     courses.add(course);
-    //     course.setTeaches(this);
-
-    // }
-
-    // public void deleteCourse(Course course) {
-    //     courses.remove(course);
-    //     course.setTeaches(null);
-    // }
-
     
 }
