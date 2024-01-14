@@ -47,15 +47,9 @@ public class TakenController {
     }
     
     @PostMapping
-    public ResponseEntity<Object> addTeaches(@RequestBody Taken taken, @RequestParam Integer studentrId) {
+    public ResponseEntity<Object> addTeaches(@RequestBody Taken taken) {
         try {
-
-            User student = userRepository.findById(studentrId).orElse(null);
-            if (student == null) {
-                return ResponseEntity.badRequest().body("Teacher not found");
-            }
-            student.addTaken(taken);
-            userRepository.save(student);
+            
             takenRepository.save(taken);
 
             return ResponseEntity.ok("Taken saved");
