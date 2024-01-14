@@ -52,4 +52,12 @@ public class Taken {
         return this.taken_year;
     }
 
+    public Set<Course> getCourses() {
+        return this.courses;
+    }
+    
+    public void setCourses(Set<Course> courses) {
+        this.courses = courses;
+    }
+
 }

@@ -3,10 +3,9 @@ package com.srms.backend.model;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
-import java.util.List;
 import java.util.Set;
+import java.util.HashSet;
 
-import javax.xml.crypto.dsig.keyinfo.RetrievalMethod;
 
 // import org.assertj.core.util.Objects;
 
@@ -29,7 +28,7 @@ public class Teaches {
     @JoinTable(name = "teaches_course", 
             joinColumns = @JoinColumn(name = "teachesId"), 
             inverseJoinColumns = @JoinColumn(name = "course_id"))
-    private Set<Course> courses;
+    private Set<Course> courses = new HashSet<>();
 
     public Teaches() {
     }
@@ -53,6 +52,14 @@ public class Teaches {
 
     public Integer getTeachYear() {
         return this.teachYear;
+    }
+
+    public Set<Course> getCourses() {
+        return this.courses;
+    }
+
+    public void setCourses(Set<Course> courses) {
+        this.courses = courses;
     }
 
     @Builder

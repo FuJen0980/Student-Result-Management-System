@@ -5,14 +5,14 @@ import org.springframework.http.ResponseEntity;
 
 import com.srms.backend.model.*;
 
-
-
 import com.srms.backend.repository.TakenRepository;
 import com.srms.backend.repository.UserRepository;
+import com.srms.backend.repository.CourseRepository;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/taken")
@@ -32,6 +33,9 @@ public class TakenController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private CourseRepository courseRepository;
 
     @GetMapping
     public ResponseEntity<Object> getAllTeaches() {
@@ -60,6 +64,28 @@ public class TakenController {
             return ResponseEntity.badRequest().body("Error");
         }
 
+    }
+
+    @PutMapping("/{taken_Id}/course/{course_Id}")
+    public ResponseEntity<Object> updateTaken(@PathVariable int taken_Id, @PathVariable int course_Id) {
+        try {
+            Taken taken = takenRepository.findById(taken_Id).orElse(null);
+            Course course = courseRepository.findById(course_Id).orElse(null);
+
+            if (taken == null || course == null) {
+                return ResponseEntity.badRequest().body("Taken or Course not found");
+            }
+            
+            Set<Course> courseList = taken.getCourses();
+            courseList.add(course);
+            taken.setCourses(courseList);
+            takenRepository.save(taken);
+
+            return ResponseEntity.badRequest().body("Take update courses successfully");
+
+        } catch (Exception error) {
+            return ResponseEntity.badRequest().body("Error with updating");
+        }
     }
 
     @DeleteMapping("/{taken_Id}")
