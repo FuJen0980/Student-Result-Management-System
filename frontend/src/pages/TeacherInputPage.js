@@ -69,8 +69,8 @@ const Teacher_input = () => {
 
         const alertElem = document.getElementById("alert");
 
-        if (!Courses.some((a) => {
-            return a.courseName === course.courseName;
+        if (!options.some((course) => {
+            return course === course.courseName;
         })) {
             showAlert(alertElem,"Course");
 

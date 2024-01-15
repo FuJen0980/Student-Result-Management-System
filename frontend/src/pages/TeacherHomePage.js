@@ -33,10 +33,10 @@ const Teacher_home = () => {
                 </div>
                 <Row className='offset-4  col-4 justify-content-end'>
                     <div className={`d-grid gap-2 pb-4`}>
-                        <Button className={`btn-primary pd`} size='lg' href='/teacher_input'>Input</Button>
+                        <Button className={`btn-primary pd`} size='lg' href='/teacher/input'>Input</Button>
                      </div>
                     <div className={`d-grid gap-2`}>
-                    <Button className = {`btn-primary`} size = 'lg' href = '/teacher_curve'>Grade</Button>
+                    <Button className = {`btn-primary`} size = 'lg' href = '/teacher/curve'>Grade</Button>
                     </div>
                 </Row>
                 <Button onClick={handleLogout}>Log-Out</Button>
