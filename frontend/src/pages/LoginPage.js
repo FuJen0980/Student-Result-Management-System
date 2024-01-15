@@ -29,7 +29,6 @@ const API_URL = process.env.REACT_APP_API_URL;
 const defaultTheme = createTheme();
 
 export default function SignInSide() {
-  console.log("API",API_URL);
   const Navigate = useNavigate();
   const handleSubmit = async (event) => {
     event.preventDefault();
