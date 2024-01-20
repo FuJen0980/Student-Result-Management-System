@@ -4,11 +4,11 @@ import Courses from '../components/Courses.js';
 import 'bootstrap/dist/css/bootstrap.css';
 
 const TeachesList = () => {
-
+    const API_URL = process.env.REACT_APP_API_URL;
     const [Teaches, setTeaches] = useState([]);
 
     const fetchTeaches = () => {
-        axios.get('http://localhost:8080/api/teaches')
+        axios.get(`${API_URL}/teaches`)
             .then((teaches) => {
                 const res = teaches.data;
                 res.sort((a, b) => {
@@ -34,11 +34,11 @@ const TeachesList = () => {
         if (!Courses.courses.some((course) => {
             return course === teaches.courseName;
         })) {
-            showAlert(alertElem,"Course");
+            alert(alertElem,"Course");
             return;
         }
         if (teaches.year < 999) {
-            showAlert(alertElem,"Year");
+            alert(alertElem,"Year");
             return;
         }
 
@@ -48,9 +48,9 @@ const TeachesList = () => {
 
         if (!checkExit) {
             
-            seTimeout(() => {
+            setTimeout(() => {
 
-                axios.post('http://localhost:8080/api/teaches', teaches)
+                axios.post(`${API_URL}/teaches`, teaches)
                     .then(fetchTeaches())
                     .catch(error => console.log(`Error: ${error}`))
 
@@ -76,7 +76,7 @@ const TeachesList = () => {
 
     const deleteTeaches = async (id) => {
         try {
-            await axios.delete(`http://localhost:8080/api/teaches/${id}`);
+            await axios.delete(`${API_URL}/teaches/${id}`);
             fetchTeaches();
             
         } catch (error) {

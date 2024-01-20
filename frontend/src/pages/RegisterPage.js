@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const RegisterPage = () => {
+    const API_URL = process.env.REACT_APP_API_URL;
+
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         name: '',
@@ -18,16 +21,14 @@ const RegisterPage = () => {
         e.preventDefault();
 
         try {
-        const response = await fetch('http://localhost:8080/api/auth/register', {
-            method: 'POST',
+        const response = await axios.post(`${API_URL}/auth/register`, formData, {
             headers: {
-            'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData),
+                'Content-Type': 'application/json', 
+            }
         });
 
-        if (response.ok) {
-            const data = await response.json();
+        if (response.status === 200) {
+            const data = response.data;
             console.log('Registration successful:', data);
             // Redirect to login page or handle as needed
             navigate('/');

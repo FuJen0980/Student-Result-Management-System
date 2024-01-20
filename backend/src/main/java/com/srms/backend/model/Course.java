@@ -1,7 +1,6 @@
 package com.srms.backend.model;
 
 import jakarta.persistence.*;
-import java.util.List;
 import lombok.Builder;
 import lombok.Data;
 

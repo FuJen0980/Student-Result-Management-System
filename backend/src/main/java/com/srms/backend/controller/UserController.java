@@ -7,18 +7,16 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.srms.backend.model.User;
 import com.srms.backend.repository.UserRepository;
 import com.srms.backend.repository.TeachesRepository;
 import com.srms.backend.repository.TakenRepository;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
-import com.srms.backend.model.User;
 import com.srms.backend.model.Teaches;
 import com.srms.backend.model.Taken;
 
@@ -38,14 +36,42 @@ public class UserController {
     @Autowired
     private TakenRepository takenRepository;
 
-    @GetMapping("/role/{name}")
-    public ResponseEntity<Object> getUser(@PathVariable String name) {
+    @GetMapping("/{uid}") 
+    public ResponseEntity<Object> getUser(@PathVariable int uid) {
         try {
-            return ResponseEntity.ok(userRepository.findByName(name));
+            return ResponseEntity.ok(userRepository.findById(uid));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error");
         }
     }
+
+    @GetMapping("/all") 
+    public ResponseEntity<Object> getAllUsers() {
+        try {
+            return ResponseEntity.ok(userRepository.findAll());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error");
+        }
+    }
+
+    @PutMapping("/update/{uid}")
+    public ResponseEntity<Object> updateUser(@PathVariable int uid, @RequestBody User request) {
+        try {
+            User existingUser = userRepository.findById(uid).orElse(null);
+            if(existingUser == null) {
+                return ResponseEntity.badRequest().body("User not found");
+            }
+            existingUser.setName(request.getName());
+            existingUser.setRole(request.getRole());
+            existingUser.setPassword(request.getPassword());
+            userRepository.save(existingUser);
+            return ResponseEntity.ok("User updated");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error Updating User");
+        }
+
+    }
+
 
     @PutMapping("/put/teacher/{teacherId}/{teachesId}")
     public ResponseEntity<Object> updateTeaches(@PathVariable int teacherId, @PathVariable int teachesId) {

@@ -1,13 +1,13 @@
 import { Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.css';
 
-import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import LoginPage from './pages/LoginPage';
 
 import TeacherHomePage from './pages/TeacherHomePage';
 import TeacherInputPage from './pages/TeacherInputPage';
 import TeacherCurvePage from './pages/TeacherCurvePage';
-import TestPage from './pages/LoginPageTest';
+
 import { Navigate } from 'react-router-dom';
 import { jwtDecode } from "jwt-decode";
 
@@ -32,8 +32,8 @@ function App() {
     <>    
       <div>
         <Routes>
-          <Route path="/test" element={<TestPage />} />
           <Route path="/" element={<LoginPage />} />
+          <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
 
           <Route path="/teacher/home" element={<ProtectedRoute element={<TeacherHomePage />} roles={["ADMIN", "TEACHER"]} />} />
