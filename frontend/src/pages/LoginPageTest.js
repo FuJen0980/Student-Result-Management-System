@@ -15,6 +15,9 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from 'react-router-dom';
+import UserContext from './user-context';
+import { useContext } from 'react';
+
 
 function Copyright(props) {
   return (
@@ -34,6 +37,8 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignInSide() {
+
+  const [user, setUser] = useContext(UserContext);
   const Navigate = useNavigate();
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -52,7 +57,13 @@ export default function SignInSide() {
 
       const decoded = jwtDecode(token)
       const userRole = decoded.roles[0];
-      console.log(userRole);
+      // console.log(userRole);
+      
+      const u = data.get('name');
+      setUser(u);
+      // console.log("1");
+      // console.log(user);
+
       switch(userRole) {
         case "ADMIN":
           Navigate("/teacher/home");

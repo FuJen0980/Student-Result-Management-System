@@ -47,6 +47,18 @@ public class UserController {
         }
     }
 
+    // @PostMapping
+    // public ResponseEntity<Object> addTeaches(@RequestBody User user) {
+    //     try {
+    //         userRepository.save(user);
+
+    //         return ResponseEntity.ok("Teaches saved");
+
+    //     } catch (Exception error) {
+    //         return ResponseEntity.badRequest().body("Error of adding User");
+    //     }
+    // }
+    
     @PutMapping("/put/teacher/{teacherId}/{teachesId}")
     public ResponseEntity<Object> updateTeaches(@PathVariable int teacherId, @PathVariable int teachesId) {
         try {

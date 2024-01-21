@@ -13,7 +13,7 @@ const TeachesList = () => {
                 const res = teaches.data;
                 res.sort((a, b) => {
                     if (a.year !== b.year) {
-                        return b.year - a.tear;
+                        return b.teach_year - a.teach_tear;
                     }
                     return b.semester - a.semester;
                 })
@@ -49,8 +49,9 @@ const TeachesList = () => {
         if (!checkExit) {
             
             seTimeout(() => {
-
-                axios.post('http://localhost:8080/api/teaches', teaches)
+                //test
+                const id = 2;
+                axios.post('http://localhost:8080/api/teaches', teaches, id) ///////
                     .then(fetchTeaches())
                     .catch(error => console.log(`Error: ${error}`))
 
@@ -58,17 +59,18 @@ const TeachesList = () => {
         }
     }
     
-    const addTeaches = (event) => {
+    const addTeaches = (event,teacher_id) => {
 
         event.preventDefault();
         document.getElementById("alert").style.display = "none";
 
         const { courseName, semester, year } = event.target;
         const newCourse = {
-            checked: false,
-            courseName: courseName.value,
+            // courseName: courseName.value,
             semester: semester.value,
-            year: year.value,
+            teach_year: year.value,
+            teacher_id: teacher_id
+
         }
         handleTeaches(newCourse);
 
