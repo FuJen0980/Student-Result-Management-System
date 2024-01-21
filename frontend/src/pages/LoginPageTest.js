@@ -60,7 +60,8 @@ export default function SignInSide() {
       // console.log(userRole);
       
       const u = data.get('name');
-      setUser(u);
+      localStorage.setItem("user", JSON.stringify(u));
+      // setUser(u);
       // console.log("1");
       // console.log(user);
 

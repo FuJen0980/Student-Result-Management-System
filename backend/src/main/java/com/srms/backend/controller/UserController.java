@@ -59,7 +59,7 @@ public class UserController {
     //     }
     // }
     
-    @PutMapping("/put/teacher/{teacherId}/{teachesId}")
+    @PatchMapping("/put/teacher/{teacherId}/{teachesId}")
     public ResponseEntity<Object> updateTeaches(@PathVariable int teacherId, @PathVariable int teachesId) {
         try {
             User teacher = userRepository.findById(teacherId).orElse(null);
@@ -71,7 +71,7 @@ public class UserController {
 
             Set<Teaches> teachesList = teacher.getTeaches();
             teachesList.add(teaches);
-            teacher.setTeachesList(teachesList);
+            // teacher.setTeachesList(teachesList);
             return ResponseEntity.ok(userRepository.save(teacher));
 
         } catch (Exception e) {
@@ -79,7 +79,7 @@ public class UserController {
         }
     }
 
-    @PutMapping("/put/student/{teacherId}/{takenId}")
+    @PatchMapping("/put/student/{teacherId}/{takenId}")
     public ResponseEntity<Object> updateTaken(@PathVariable int studentId, @PathVariable int takenId) {
         try {
             User student = userRepository.findById(studentId).orElse(null);
@@ -90,7 +90,7 @@ public class UserController {
 
             Set<Taken> takenList = student.getTaken();
             takenList.add(taken);
-            student.setTakenList(takenList);
+            // student.setTakenList(takenList);
             return ResponseEntity.ok(userRepository.save(student));
 
         } catch (Exception e) {

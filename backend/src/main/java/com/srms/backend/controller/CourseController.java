@@ -36,6 +36,15 @@ public class CourseController {
         }
     }
 
+    @GetMapping("/{courseId}")
+    public ResponseEntity<Object> getCourse(@PathVariable("course_id") int courseId) {
+        try {
+            return ResponseEntity.ok(courseRepository.findById(courseId));
+        } catch (Exception error) {
+            return ResponseEntity.badRequest().body("Error");
+        }
+    }
+
     @PostMapping
     public ResponseEntity<Object> addCourse(@RequestBody Course course) {
         try {

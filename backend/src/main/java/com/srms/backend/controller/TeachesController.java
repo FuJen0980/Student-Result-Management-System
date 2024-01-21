@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -48,6 +49,16 @@ public class TeachesController {
             return ResponseEntity.badRequest().body("Error");
         }
     }
+
+    @GetMapping("/get/{teachesId}")
+    public ResponseEntity<Object> getTeaches(@PathVariable int teachesId) {
+        try {
+            return ResponseEntity.ok(teachesRepository.findByteachesId(teachesId));
+        } catch (Exception error) {
+            return ResponseEntity.badRequest().body("Error");
+        }
+    }
+
     
     @PostMapping
     public ResponseEntity<Object> addTeaches(@RequestBody Teaches teaches) {
@@ -62,7 +73,7 @@ public class TeachesController {
 
     }
 
-    @PutMapping("/put/{teachesId}/{course_Id}")
+    @PatchMapping("/put/{teachesId}/{course_Id}")
     public ResponseEntity<Object> updateTeaches(@PathVariable int teachesId, @PathVariable int course_Id) {
         try {
             Teaches teaches = teachesRepository.findById(teachesId).orElse(null);
