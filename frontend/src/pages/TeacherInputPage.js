@@ -21,12 +21,16 @@ const Teacher_input = () => {
     const [Teaches, setTeaches] = useState([]);
     const [Courses, setCourses] = useState([]);
     const [userID, setUserID] = useState(null);
+    //get token
     const token = localStorage.getItem('token');
     const header = {
         headers: {
-            Authorization: `Bearer ${token}`,  
-        }
-    }
+          Authorization: `Bearer ${token}`,
+          'Access-Control-Allow-Origin': '*',
+          //   'Content-Type': 'application/json',
+        //   'Access-Control-Allow-Methods': 'POST, PATCH, OPTIONS',
+        },
+      };
     
 
     const getUser = () => {
@@ -51,6 +55,7 @@ const Teacher_input = () => {
                 return b.semester - a.semester;
             })
             setTeaches(teaches);
+            console.log(teaches);
         })
         .catch(error => console.log(error));
         
@@ -59,7 +64,7 @@ const Teacher_input = () => {
     const fetchCourses = () => {
         axios.get("http://localhost:8080/api/courses",header)
             .then(response => {
-                console.log(response.data)
+                // console.log(response.data)
                 setCourses(response.data)
             })
             .catch(error => console.log("fail to get courses"));
@@ -76,12 +81,20 @@ const Teacher_input = () => {
         alertElem.style.display = 'block';
     }
 
-    const handleTeaches = (teaches, courseName) => {
+    // const addCourseToTeachesAndUser = async (userID, teachesId, courseId,teaches) => {
+    //     await axios.patch(`http://localhost:8080/api/teaches/${teachesId}/${courseId}`,header)
+    //         .catch(error => console.log(`Error: ${error}`))
+
+    //     await axios.patch(`http://localhost:8080/api/user/patch/teacher/${userID}/${teachesId}`,header) ///////
+    //         .catch(error => console.log(`Error: ${error}`))
         
+    //     fetchTeaches();
+    // }
+
+    const handleTeaches = (teaches, courseName) => {
+    
         const alertElem = document.getElementById("alert");
-        if (!Courses.some((course) => {
-            return course === courseName;
-        })) {
+        if (!Courses.some(course => course.courseName === courseName)) {
             showAlert(alertElem, "Course");
             return;
         }
@@ -90,67 +103,48 @@ const Teacher_input = () => {
             showAlert(alertElem,"Year");
             return;
         }
-        const checkExit = Teaches.some((teach) => {
 
-            const courses = teach.courses;
-            const courseExists = courses.some((course) => {
-                return courseName === course;
-            });
-            return {
-                semesterYearMatch: teach.semester === teach.semester && teach.teachYear === teach.teachYear,
-                courseExists: courseExists
-            };
-        });
+        const courseId = Courses.find(c => c.courseName === courseName)?.course_id;
+        const checkTeaches = Teaches.find(teach => teach.semester === teaches.semester && teach.teachYear === teaches.teachYear) || null;
+        
 
+        if (checkTeaches != null){
+            const checkCourse = checkTeaches.courses.some(a => a.courseName === courseName);
 
-        if (checkExit.semesterYearMatch) {
+            //allmatch
+            if (checkCourse) return;
+
+            //course not exit, add couse to teaches and user
+
+            axios.patch(`http://localhost:8080/api/teaches/${checkTeaches.teachesId}/${courseId}`,header)
+                .catch(error => console.log(`Error: ${error}`))
             
-            //get courseId
-            var courseId = 0;
-            axios.get('http://localhost:8080/api/courses')
-                .then(response => {
-                    const course = response.data.find(c => c.courseName === courseName)
-                    courseId = course?.course_id;
-                }).catch(error => console.log(error));
-            
-            //all match 
-            if (checkExit.courseExists) {
-                return;
-            //teaches exit but course not exit
-            } else {
-               //add course to both the user and teache
-                const teach = Teaches.find(a => a.semester === teaches.semester && a.teachYear === teaches.teachYear)
-
-                //not finish 
-                
-            }
-        //teach not exit 
         } else {
-            //add teach and to user 
-                axios.post('http://localhost:8080/api/teaches',header,teaches) 
-                    .catch(error => console.log(`Error: ${error}`))
-                
+            //add teach+couse, add teach to user 
+            axios.post('http://localhost:8080/api/teaches',teaches,header) 
+                .catch(error => console.log(`Error: ${error}`))
+            
+            let teachID = null;    
             axios.get('http://localhost:8080/api/teaches', header)
-                .then(response => {
-                    const teachesList = response.data;
-                    const teaches = teachesList.find(a => a.courses.length === 0)
+            .then(response => {
+                const teachesList = response.data;
+                console.log("test")
+                console.log(teachesList)
+                console.log(teachesList[0].courses.length)
+                teachID = teachesList.find(a => a.courses.length === 0 && a.semester === teaches.semester && a.teachYear === teaches.teachYear).teachesId || null;
+    
+            }).catch(error => console.log(error))
+            console.log("test2")
+            console.log(teachID);
+            // addCourseToTeachesAndUser(userID,teachID, courseId, teaches)
+            axios.patch(`http://localhost:8080/api/teaches/${teachID}/${courseId}`,header)
+            .catch(error => console.log(`Error: ${error}`))
 
-                    addCourseToTeachesAndUser(userID, teaches.teachesId, courseId, teaches)
-
-                    
-                })
+            axios.patch(`http://localhost:8080/api/user/patch/teacher/${userID}/${teachID}`,header) ///////
+                .catch(error => console.log(`Error: ${error}`))
+            
+            fetchTeaches();
         }
-
-    }
-
-    const addCourseToTeachesAndUser = (userID, teachesId, courseId,teaches) => {
-        axios.patch(`http://localhost:8080/api/teaches/${teachesId}/${courseId}`)
-        .catch(error => console.log(`Error: ${error}`))
-
-        axios.patch(`http://localhost:8080/api/${userID}/${teachesId}`,teaches) ///////
-        .then(fetchTeaches())
-        .catch(error => console.log(`Error: ${error}`))
-   
     }
 
     const addTeaches = (event) => {
@@ -159,16 +153,17 @@ const Teacher_input = () => {
         document.getElementById("alert").style.display = "none";
 
         const { semester, year } = event.target;
-        const courseName = event.target.courseName;
+        const courseName = event.target.courseName.value;
         const newCourse = {
             semester: semester.value,
-            teachYear : year.value,
+            teachYear : +year.value,
         }
         handleTeaches(newCourse, courseName);
         
     }
    
     const deleteTeaches = async (id) => {
+        //delete 
         try {
             await axios.delete(`http://localhost:8080/api/teaches/${id}`);
             fetchTeaches();
@@ -185,9 +180,9 @@ const Teacher_input = () => {
                 
                 <form className={`text-center`} onSubmit ={addTeaches} id = "teacherInput">
                 <select name = "semester" className= "m-2">
-                        <option value="Fall">Fall</option>
-                        <option value="Spring">Spring</option>
-                        <option value = "Summer">Summer</option>
+                        <option value="fall">Fall</option>
+                        <option value="spring">Spring</option>
+                        <option value = "summer">Summer</option>
                  </select>
                 <input placeholder = "course name" autocomplete="off" list = "courseList" name = "courseName" className='px-4 py-1  me-2 mt-4 rounded-2'></input> 
                 <datalist id="courseList" placeholder="Course Name">
