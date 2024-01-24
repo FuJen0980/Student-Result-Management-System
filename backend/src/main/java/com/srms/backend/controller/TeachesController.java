@@ -29,7 +29,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/teaches")
-@CrossOrigin("*")
+@CrossOrigin(origins = "http://localhost:3000")
 public class TeachesController {
     
     @Autowired
@@ -73,7 +73,7 @@ public class TeachesController {
 
     }
 
-    @PatchMapping("/put/{teachesId}/{course_Id}")
+    @PutMapping("/patch/{teachesId}/{course_Id}")
     public ResponseEntity<Object> updateTeaches(@PathVariable int teachesId, @PathVariable int course_Id) {
         try {
             Teaches teaches = teachesRepository.findById(teachesId).orElse(null);
@@ -96,14 +96,14 @@ public class TeachesController {
     }
 
     @DeleteMapping("/{teachesId}")
-    public ResponseEntity<Object> deleteTeaches(@PathVariable int teachesId,@RequestParam Integer teacherId) {
+    public ResponseEntity<Object> deleteTeaches(@PathVariable int teachesId) {
         try {
-            User teacher = userRepository.findById(teacherId).orElse(null);
-            if (teacher != null) {
-                Optional<Teaches> teachesOptional = teachesRepository.findById(teachesId);
-                teacher.deleteTeaches(teachesOptional);
-                userRepository.save(teacher);
-            }
+            // User teacher = userRepository.findById(teacherId).orElse(null);
+            // if (teacher != null) {
+            //     Optional<Teaches> teachesOptional = teachesRepository.findById(teachesId);
+            //     teacher.deleteTeaches(teachesOptional);
+            //     userRepository.save(teacher);
+            // }
 
             teachesRepository.deleteById(teachesId);
             

@@ -26,7 +26,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/api/user")
-@CrossOrigin("*")
+@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
     
     @Autowired
@@ -59,7 +59,7 @@ public class UserController {
     //     }
     // }
     
-    @PatchMapping("/put/teacher/{teacherId}/{teachesId}")
+    @PatchMapping("/patch/teacher/{teacherId}/{teachesId}")
     public ResponseEntity<Object> updateTeaches(@PathVariable int teacherId, @PathVariable int teachesId) {
         try {
             User teacher = userRepository.findById(teacherId).orElse(null);
@@ -79,7 +79,7 @@ public class UserController {
         }
     }
 
-    @PatchMapping("/put/student/{teacherId}/{takenId}")
+    @PatchMapping("/patch/student/{teacherId}/{takenId}")
     public ResponseEntity<Object> updateTaken(@PathVariable int studentId, @PathVariable int takenId) {
         try {
             User student = userRepository.findById(studentId).orElse(null);
