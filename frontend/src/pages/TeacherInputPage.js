@@ -6,6 +6,7 @@ import { FaTrashAlt } from 'react-icons/fa';
 import Alert from 'react-bootstrap/Alert';
 import UserContext from './user-context.js';
 import { useContext } from 'react';
+import { addTeaches } from '../components/HandleAddTeaches';
 import axios from 'axios';
 
 const Teacher_input = () => {
@@ -26,7 +27,7 @@ const Teacher_input = () => {
     const header = {
         headers: {
           Authorization: `Bearer ${token}`}
-      };
+    };
     
     const getUser = () => {
         const userData = localStorage.getItem("user");
@@ -44,8 +45,8 @@ const Teacher_input = () => {
             setUserID(response.data?.uid);
             const teaches = response.data?.teachesList;
             teaches?.sort((a, b) => {
-                if (a.year !== b.year) {
-                    return b.teach_year - a.teach_tear;
+                if (a.teachYear !== b.teachYear) {
+                    return b.teachYear - a.teachYear;
                 }
                 return b.semester - a.semester;
             })
@@ -70,96 +71,6 @@ const Teacher_input = () => {
         fetchCourses();
     }, [])
 
-    const showAlert = (alertElem, word) => {
-        alertElem.innerHTML = `${word} not exit —check it out!`;
-        alertElem.style.display = 'block';
-    }
-
-    const handleTeaches = (teaches, courseName) => {
- 
-        const alertElem = document.getElementById("alert");
-        if (!Courses.some(course => course.courseName === courseName)) {
-            showAlert(alertElem, "Course");
-            return;
-        }
-
-        if (teaches.year < 999) {
-            showAlert(alertElem,"Year");
-            return;
-        }
-
-        const courseId = Courses.find(c => c.courseName === courseName)?.course_id;
-        const checkTeaches = Teaches.find(teach => teach.semester === teaches.semester && teach.teachYear === teaches.teachYear) || null;
-        
-
-        if (checkTeaches != null){
-            const checkCourse = checkTeaches.courses.some(a => a.courseName === courseName);
-
-            //allmatch
-            if (checkCourse) return;
-            //course not exit, add couse to teaches and user
-            fetch(`http://localhost:8080/api/teaches/patch/${checkTeaches.teachesId}/${courseId}`, {
-                method: 'PATCH',
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem("token")}`,
-            }
-            })
-                .then(response => {
-                    console.log(response);
-                    fetchTeaches(); 
-                })
-                .catch(error => console.log(`Error: ${error}`))
-            
-        } else {
-            //add teach+couse, add teach to user 
-            axios.post('http://localhost:8080/api/teaches',teaches,header) 
-                .catch(error => console.log(`Error: ${error}`))
-            
-            let teachesId = null;    
-            axios.get('http://localhost:8080/api/teaches', header)
-            .then(response => {
-                const teachesList = response.data;
-                teachesId = teachesList.find(a => a.courses.length === 0 && a.semester === teaches.semester && a.teachYear === teaches.teachYear).teachesId || null;
-                console.log("test2")
-                console.log(teachesId);
-
-                fetch(`http://localhost:8080/api/teaches/patch/${teachesId}/${courseId}`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem("token")}`,
-                    }
-                })
-                .catch(error => console.log(`Error: ${error}`))
-            
-                fetch(`http://localhost:8080/api/user/patch/teacher/${userID}/${teachesId}`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem("token")}`,
-                    }
-                })
-                .then( () => fetchTeaches())    
-                .catch(error => console.log(`Error: ${error}`))
-    
-            }).catch(error => console.log(error))
-         
-        }
-    }
-
-    const addTeaches = (event) => {
-
-        event.preventDefault();
-        document.getElementById("alert").style.display = "none";
-
-        const { semester, year } = event.target;
-        const courseName = event.target.courseName.value;
-        const newCourse = {
-            semester: semester.value,
-            teachYear : +year.value,
-        }
-        handleTeaches(newCourse, courseName);
-        
-    }
-   
     const deleteTeaches = async (id) => {
         //delete 
         try {
@@ -176,7 +87,7 @@ const Teacher_input = () => {
             <main style = {homepagestyle}>
                 <TeacherHeader />
                 
-                <form className={`text-center`} onSubmit ={addTeaches} id = "teacherInput">
+                <form className={`text-center`} onSubmit ={(event) => addTeaches(event, userID, Courses, Teaches, fetchTeaches,header)} id = "teacherInput">
                 <select name = "semester" className= "m-2">
                         <option value="fall">Fall</option>
                         <option value="spring">Spring</option>
