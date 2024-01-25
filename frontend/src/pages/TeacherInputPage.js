@@ -14,7 +14,7 @@ const Teacher_input = () => {
         backgroundPosition: 'center',
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
-        height: '610px'
+        height: '100vh'
     }
 
     const [user, setUser] = useContext(UserContext);
@@ -25,14 +25,9 @@ const Teacher_input = () => {
     const token = localStorage.getItem('token');
     const header = {
         headers: {
-          Authorization: `Bearer ${token}`,
-        //   'Access-Control-Allow-Origin': '*',
-            'Content-Type': 'application/json'
-        //   'Access-Control-Allow-Methods': 'POST, PATCH, OPTIONS',
-        },
+          Authorization: `Bearer ${token}`}
       };
     
-
     const getUser = () => {
         const userData = localStorage.getItem("user");
         if (userData) {
@@ -57,8 +52,7 @@ const Teacher_input = () => {
             setTeaches(teaches);
             console.log(teaches);
         })
-        .catch(error => console.log(error));
-        
+        .catch(error => console.log(error));  
     }
 
     const fetchCourses = () => {
@@ -104,8 +98,16 @@ const Teacher_input = () => {
             //allmatch
             if (checkCourse) return;
             //course not exit, add couse to teaches and user
-            axios.put(`http://localhost:8080/api/teaches/patch/${checkTeaches.teachesId}/${courseId}`, header)
-                .then(response => console.log(response))
+            fetch(`http://localhost:8080/api/teaches/patch/${checkTeaches.teachesId}/${courseId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem("token")}`,
+            }
+            })
+                .then(response => {
+                    console.log(response);
+                    fetchTeaches(); 
+                })
                 .catch(error => console.log(`Error: ${error}`))
             
         } else {
@@ -117,30 +119,29 @@ const Teacher_input = () => {
             axios.get('http://localhost:8080/api/teaches', header)
             .then(response => {
                 const teachesList = response.data;
-                console.log("test")
-                console.log(teachesList)
-                console.log(teachesList[0].courses.length)
                 teachesId = teachesList.find(a => a.courses.length === 0 && a.semester === teaches.semester && a.teachYear === teaches.teachYear).teachesId || null;
                 console.log("test2")
                 console.log(teachesId);
 
-                axios.patch(`http://localhost:8080/api/teaches/patch/${teachesId}/${courseId}/`,header)
+                fetch(`http://localhost:8080/api/teaches/patch/${teachesId}/${courseId}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem("token")}`,
+                    }
+                })
                 .catch(error => console.log(`Error: ${error}`))
-
-                axios.patch(`http://localhost:8080/api/user/patch/teacher/${userID}/${teachesId}/`,header) 
-                    .catch(error => console.log(`Error: ${error}`))
-                
+            
+                fetch(`http://localhost:8080/api/user/patch/teacher/${userID}/${teachesId}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem("token")}`,
+                    }
+                })
+                .then( () => fetchTeaches())    
+                .catch(error => console.log(`Error: ${error}`))
     
             }).catch(error => console.log(error))
          
-            // addCourseToTeachesAndUser(userID,teachID, courseId, teaches)
-            // axios.patch(`http://localhost:8080/api/teaches/patch/${teachID}/${courseId}`,header)
-            // .catch(error => console.log(`Error: ${error}`))
-
-            // axios.patch(`http://localhost:8080/api/user/patch/teacher/${userID}/${teachID}`,header) 
-            //     .catch(error => console.log(`Error: ${error}`))
-            
-            // fetchTeaches();
         }
     }
 

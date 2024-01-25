@@ -73,7 +73,7 @@ public class TeachesController {
 
     }
 
-    @PutMapping("/patch/{teachesId}/{course_Id}")
+    @PatchMapping("/patch/{teachesId}/{course_Id}")
     public ResponseEntity<Object> updateTeaches(@PathVariable int teachesId, @PathVariable int course_Id) {
         try {
             Teaches teaches = teachesRepository.findById(teachesId).orElse(null);
