@@ -7,6 +7,7 @@ import Alert from 'react-bootstrap/Alert';
 import UserContext from './user-context.js';
 import { useContext } from 'react';
 import { addTeaches } from '../components/HandleAddTeaches';
+import { deleteTeaches } from '../components/HandleDeleteTeaches.js';
 import axios from 'axios';
 
 const Teacher_input = () => {
@@ -15,13 +16,14 @@ const Teacher_input = () => {
         backgroundPosition: 'center',
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
-        height: '100vh'
+        height: '90vh'
     }
 
     const [user, setUser] = useContext(UserContext);
     const [Teaches, setTeaches] = useState([]);
     const [Courses, setCourses] = useState([]);
     const [userID, setUserID] = useState(null);
+    const [CourseNum, setCourseNum] = useState(0);
     //get token
     const token = localStorage.getItem('token');
     const header = {
@@ -37,21 +39,28 @@ const Teacher_input = () => {
         }
     };
 
+
     const fetchTeaches = () => {
 
         axios.get(`http://localhost:8080/api/user/role/${user}`, header)
         .then((response) => {
     
             setUserID(response.data?.uid);
-            const teaches = response.data?.teachesList;
-            teaches?.sort((a, b) => {
+            const teachesList = response.data?.teachesList;
+            teachesList?.sort((a, b) => {
                 if (a.teachYear !== b.teachYear) {
                     return b.teachYear - a.teachYear;
                 }
                 return b.semester - a.semester;
             })
-            setTeaches(teaches);
-            console.log(teaches);
+            let courseNum = 0;
+            for (const teaches of teachesList) {
+                courseNum += teaches.courses.length;   
+            }
+
+            setCourseNum(courseNum);
+            setTeaches(teachesList);
+            
         })
         .catch(error => console.log(error));  
     }
@@ -64,23 +73,12 @@ const Teacher_input = () => {
             })
             .catch(error => console.log("fail to get courses"));
     }
-    
+
     useEffect(() => {
         getUser();
         fetchTeaches();
         fetchCourses();
     }, [])
-
-    const deleteTeaches = async (id) => {
-        //delete 
-        try {
-            await axios.delete(`http://localhost:8080/api/teaches/${id}`);
-            fetchTeaches();
-            
-        } catch (error) {
-            console.log(`Error: ${error}`);
-        } 
-    }
 
     return (
         <>
@@ -119,22 +117,24 @@ const Teacher_input = () => {
                                     }} onMouseOut={(event) => {
                                         event.target.style.backgroundColor = '';
                                     }}>{course.courseName}, {teaches.semester}, {teaches.teachYear}</label>
-                                    <FaTrashAlt role="button" tabIndex="0" className="ms-3" onClick={()=>deleteTeaches(course.id)}/>
+                                    <FaTrashAlt role="button" tabIndex="0" className="ms-3" onClick={()=>deleteTeaches(teaches, course.course_id, header,fetchTeaches)}/>
                                 </li>
                                  
                             ))
                         ))}
 
                     </ul>
-                </div>) : <p className = "text-white text-center pt-5">Your lists are empty</p>}
+                </div>) : <p className="text-white text-center pt-5">Your lists are empty</p>}
+        
 
             </main>
-
-            <footer className={`bg-black text-white display-6 text-center`}>
-                <div className={`bg-secondary container-fluid pb-4 bg-opacity-25`}>
-                   <p>Insert {Teaches.length} items</p>
+            <footer className={`bg-black text-white display-6 text-center`} style = {{minHeight: '10vh'}}>
+                <div className={`bg-secondary container-fluid p-4 bg-opacity-25`}>
+                   <p>Insert {CourseNum} items</p>
                 </div>
             </footer> 
+
+
         </>
     );
 }

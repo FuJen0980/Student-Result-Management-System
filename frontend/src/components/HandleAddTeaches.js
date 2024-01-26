@@ -12,21 +12,23 @@ const handleAddTeaches = async (teaches, courseName, Courses, Teaches, fetchTeac
         return;
     }
 
-    if (teaches.year < 999) {
+    if (teaches.year < "999") {
         showAlert(alertElem,"Year");
         return;
     }
 
+    //handle input box
+    const form = document.getElementById("teacherInput").reset();
+    
     const courseId = Courses.find(c => c.courseName === courseName)?.course_id;
     const checkTeaches = Teaches.find(teach => teach.semester === teaches.semester && teach.teachYear === teaches.teachYear) || null;
 
     if (checkTeaches != null){
         const checkCourse = checkTeaches.courses.some(a => a.courseName === courseName);
-
         //allmatch
         if (checkCourse) return;
         //course not exit, add couse to teaches and user
-        fetch(`http://localhost:8080/api/teaches/patch/${checkTeaches.teachesId}/${courseId}`, {
+        fetch(`http://localhost:8080/api/teaches/patch/add/${checkTeaches.teachesId}/${courseId}`, {
             method: 'PATCH',
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem("token")}`,
@@ -49,7 +51,7 @@ const handleAddTeaches = async (teaches, courseName, Courses, Teaches, fetchTeac
             const teachesList = response.data;
             teachesId = teachesList.find(a => a.courses.length === 0 && a.semester === teaches.semester && a.teachYear === teaches.teachYear).teachesId || null;
 
-            fetch(`http://localhost:8080/api/teaches/patch/${teachesId}/${courseId}`, {
+            fetch(`http://localhost:8080/api/teaches/patch/add/${teachesId}/${courseId}`, {
                 method: 'PATCH',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem("token")}`,
@@ -57,7 +59,7 @@ const handleAddTeaches = async (teaches, courseName, Courses, Teaches, fetchTeac
             })
             .catch(error => console.log(`Error: ${error}`))
         
-            fetch(`http://localhost:8080/api/user/patch/teacher/${userID}/${teachesId}`, {
+            fetch(`http://localhost:8080/api/user/patch/teacher/add/${userID}/${teachesId}`, {
                 method: 'PATCH',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem("token")}`,
@@ -84,6 +86,7 @@ const addTeaches = async (event, userID, Courses, Teaches, fetchTeaches, header)
         semester: semester.value,
         teachYear: +year.value,
     }
+    console.log(typeof year.value)
     handleAddTeaches(newTeaches, courseName, Courses, Teaches, fetchTeaches, userID, header)
 
 }

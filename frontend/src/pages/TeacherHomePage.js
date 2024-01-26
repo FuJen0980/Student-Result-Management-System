@@ -13,7 +13,7 @@ const Teacher_home = () => {
         backgroundPosition: 'center',
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
-        height: '700px'
+        height: '100vh'
     }
 
     const navigate = useNavigate();
@@ -40,7 +40,6 @@ const Teacher_home = () => {
       // Remove JWT token from local storage
         localStorage.removeItem("token");
         localStorage.removeItem("user");
-        
       // Redirect to the login page
       navigate('/');
     };
