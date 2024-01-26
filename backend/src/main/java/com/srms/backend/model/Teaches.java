@@ -61,6 +61,14 @@ public class Teaches {
     public void setCourses(Set<Course> courses) {
         this.courses = courses;
     }
+    public void removeCourseById(long courseId) {
+        for (Course course : courses) {
+            if (course.getId() == courseId) {
+                courses.remove(course);
+                break;
+            }
+        }
+    }
 
     @Builder
     public Teaches(Integer teachesId, String semester, Integer teachYear, Set<Course> courses) {

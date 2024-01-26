@@ -1,9 +1,10 @@
 package com.srms.backend.model;
 
 import jakarta.persistence.*;
-import java.util.List;
+import java.util.Set;
 import lombok.Builder;
 import lombok.Data;
+
 
 
 @Entity
@@ -15,6 +16,11 @@ public class Course{
     private Integer course_id;
 
     private String courseName;
+
+    
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "course")
+    Set<Taken> takenList;
+    
 
     //miss a relationship with the studentTaken table 
 

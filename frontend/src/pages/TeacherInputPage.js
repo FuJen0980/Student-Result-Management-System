@@ -5,24 +5,18 @@ import { useState,useEffect} from 'react';
 import { FaTrashAlt } from 'react-icons/fa';
 import Alert from 'react-bootstrap/Alert';
 import UserContext from './user-context.js';
+import { pagestyle } from '../components/PageStyle.js';
 import { useContext } from 'react';
 import { addTeaches } from '../components/HandleAddTeaches';
 import { deleteTeaches } from '../components/HandleDeleteTeaches.js';
 import axios from 'axios';
 
 const Teacher_input = () => {
-    const homepagestyle = {
-        backgroundImage: 'url("https://smd-cms.nasa.gov/wp-content/uploads/2023/06/North-star_celestial-pole-1-jpg.webp?w=4096&format=png")',
-        backgroundPosition: 'center',
-        backgroundSize: 'cover',
-        backgroundRepeat: 'no-repeat',
-        height: '90vh'
-    }
 
     const [user, setUser] = useContext(UserContext);
+    const [userID, setUserID] = useState(null);
     const [Teaches, setTeaches] = useState([]);
     const [Courses, setCourses] = useState([]);
-    const [userID, setUserID] = useState(null);
     const [CourseNum, setCourseNum] = useState(0);
     //get token
     const token = localStorage.getItem('token');
@@ -82,7 +76,7 @@ const Teacher_input = () => {
 
     return (
         <>
-            <main style = {homepagestyle}>
+            <main style = {pagestyle}>
                 <TeacherHeader />
                 
                 <form className={`text-center`} onSubmit ={(event) => addTeaches(event, userID, Courses, Teaches, fetchTeaches,header)} id = "teacherInput">

@@ -59,7 +59,7 @@ public class UserController {
     //     }
     // }
     
-    @PatchMapping("/patch/teacher/{teacherId}/{teachesId}")
+    @PatchMapping("/patch/teacher/add/{teacherId}/{teachesId}")
     public ResponseEntity<Object> updateTeaches(@PathVariable int teacherId, @PathVariable int teachesId) {
         try {
             User teacher = userRepository.findById(teacherId).orElse(null);
@@ -79,6 +79,18 @@ public class UserController {
         }
     }
 
+    @PatchMapping("/patch/teacher/delete/{teacherId}/{teachesId}")
+    public ResponseEntity<Object> deleteTeaches(@PathVariable int teacherId, @PathVariable int teachesId) {
+        try {
+            User teacher = userRepository.findById(teacherId).orElse(null);
+            teacher.deleteTeaches(teachesId);
+            return ResponseEntity.ok(userRepository.save(teacher));
+
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error");
+        }
+    }
+
     @PatchMapping("/patch/student/{teacherId}/{takenId}")
     public ResponseEntity<Object> updateTaken(@PathVariable int studentId, @PathVariable int takenId) {
         try {
@@ -90,7 +102,7 @@ public class UserController {
 
             Set<Taken> takenList = student.getTaken();
             takenList.add(taken);
-            // student.setTakenList(takenList);
+
             return ResponseEntity.ok(userRepository.save(student));
 
         } catch (Exception e) {

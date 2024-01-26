@@ -95,13 +95,26 @@ public class User implements UserDetails{
         this.takenList = takenList;
     }
 
-    public void deleteTaken(Optional<Taken> optionalTaken) {
-        optionalTaken.ifPresent(taken -> takenList.remove(taken));
+    // public void deleteTaken(int id) {
+    //     for (Taken taken : takenList) {
+            
+    //     }
+    // }
+    
+    public void deleteTeaches(int id) {
+        for (Teaches teaches : teachesList) {
+            if (teaches.getTeachesId() == id) {
+                teachesList.remove(teaches);
+                break;
+            }
+        }
     }
     
-    public void deleteTeaches(Optional<Teaches> optionalTeaches) {
-        optionalTeaches.ifPresent(teaches -> teachesList.remove(teaches));
-
+    public int getCoursesNum() {
+        int res = 0;
+        for (Teaches teaches : teachesList) {
+            res += teaches.getCourses().size();
+        }
+        return res;
     }
-    
 }

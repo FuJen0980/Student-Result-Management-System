@@ -60,37 +60,37 @@ public class TakenController {
 
     }
 
-    @PutMapping("/{taken_Id}/course/{course_Id}")
-    public ResponseEntity<Object> updateTaken(@PathVariable int taken_Id, @PathVariable int course_Id) {
-        try {
-            Taken taken = takenRepository.findById(taken_Id).orElse(null);
-            Course course = courseRepository.findById(course_Id).orElse(null);
+    // @PutMapping("/{taken_Id}/course/{course_Id}")
+    // public ResponseEntity<Object> updateTaken(@PathVariable int taken_Id, @PathVariable int course_Id) {
+    //     try {
+    //         Taken taken = takenRepository.findById(taken_Id).orElse(null);
+    //         Course course = courseRepository.findById(course_Id).orElse(null);
 
-            if (taken == null || course == null) {
-                return ResponseEntity.badRequest().body("Taken or Course not found");
-            }
+    //         if (taken == null || course == null) {
+    //             return ResponseEntity.badRequest().body("Taken or Course not found");
+    //         }
             
-            Set<Course> courseList = taken.getCourses();
-            courseList.add(course);
-            taken.setCourses(courseList);
-            takenRepository.save(taken);
+    //         Set<Course> courseList = taken.getCourses();
+    //         courseList.add(course);
+    //         taken.setCourses(courseList);
+    //         takenRepository.save(taken);
 
-            return ResponseEntity.badRequest().body("Take update courses successfully");
+    //         return ResponseEntity.badRequest().body("Take update courses successfully");
 
-        } catch (Exception error) {
-            return ResponseEntity.badRequest().body("Error with updating");
-        }
-    }
+    //     } catch (Exception error) {
+    //         return ResponseEntity.badRequest().body("Error with updating");
+    //     }
+    // }
 
     @DeleteMapping("/{taken_Id}")
     public ResponseEntity<Object> deleteTeaches(@PathVariable int takenId,@RequestParam Integer studentId) {
         try {
-            User student = userRepository.findById(studentId).orElse(null);
-            if (student != null) {
-                Optional<Taken> takenOptional = takenRepository.findById(takenId);
-                student.deleteTaken(takenOptional);
-                userRepository.save(student);
-            }
+            // User student = userRepository.findById(studentId).orElse(null);
+            // if (student != null) {
+            //     Optional<Taken> takenOptional = takenRepository.findById(takenId);
+            //     student.deleteTaken(takenOptional);
+            //     userRepository.save(student);
+            // }
 
             takenRepository.deleteById(takenId);
             return ResponseEntity.ok("Taken deleted");
