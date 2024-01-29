@@ -86,7 +86,7 @@ const addTeaches = async (event, userID, Courses, Teaches, fetchTeaches, header)
         semester: semester.value,
         teachYear: +year.value,
     }
-    console.log(typeof year.value)
+    
     handleAddTeaches(newTeaches, courseName, Courses, Teaches, fetchTeaches, userID, header)
 
 }

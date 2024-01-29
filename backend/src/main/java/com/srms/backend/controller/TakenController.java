@@ -46,51 +46,34 @@ public class TakenController {
         }
     }
     
-    @PostMapping
-    public ResponseEntity<Object> addTeaches(@RequestBody Taken taken) {
+    @PostMapping("/post/{courseId}/{userId}")
+    public ResponseEntity<Object> addTeaches(@RequestBody Taken taken, @PathVariable int courseId, @PathVariable int userId) {
         try {
             
-            takenRepository.save(taken);
-
-            return ResponseEntity.ok("Taken saved");
+            Taken res = takenRepository.findBySemesterAndTaken_yearAndCourse(taken.getSemester(), taken.getTaken_year(),
+                    taken.getCourse()).orElse(null);
+            if (res == null) {
+                Course course = courseRepository.findById(courseId).orElse(null);
+                taken.setCourse(course);
+                takenRepository.save(taken);
+                res = takenRepository.findBySemesterAndTaken_yearAndCourse(taken.getSemester(), taken.getTaken_year(),
+                        taken.getCourse()).orElse(null);
+            }
+            
+            User user = userRepository.findById(userId).orElse(null);
+            user.addTaken(res);
+            userRepository.save(user);
+        
+            return ResponseEntity.ok("Add");
 
         } catch (Exception error) {
-            return ResponseEntity.badRequest().body("Error");
+            return ResponseEntity.badRequest().body("error");
         }
-
     }
-
-    // @PutMapping("/{taken_Id}/course/{course_Id}")
-    // public ResponseEntity<Object> updateTaken(@PathVariable int taken_Id, @PathVariable int course_Id) {
-    //     try {
-    //         Taken taken = takenRepository.findById(taken_Id).orElse(null);
-    //         Course course = courseRepository.findById(course_Id).orElse(null);
-
-    //         if (taken == null || course == null) {
-    //             return ResponseEntity.badRequest().body("Taken or Course not found");
-    //         }
-            
-    //         Set<Course> courseList = taken.getCourses();
-    //         courseList.add(course);
-    //         taken.setCourses(courseList);
-    //         takenRepository.save(taken);
-
-    //         return ResponseEntity.badRequest().body("Take update courses successfully");
-
-    //     } catch (Exception error) {
-    //         return ResponseEntity.badRequest().body("Error with updating");
-    //     }
-    // }
-
+    
     @DeleteMapping("/{taken_Id}")
     public ResponseEntity<Object> deleteTeaches(@PathVariable int takenId,@RequestParam Integer studentId) {
         try {
-            // User student = userRepository.findById(studentId).orElse(null);
-            // if (student != null) {
-            //     Optional<Taken> takenOptional = takenRepository.findById(takenId);
-            //     student.deleteTaken(takenOptional);
-            //     userRepository.save(student);
-            // }
 
             takenRepository.deleteById(takenId);
             return ResponseEntity.ok("Taken deleted");

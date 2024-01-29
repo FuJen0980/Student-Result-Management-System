@@ -47,17 +47,15 @@ public class UserController {
         }
     }
 
-    // @PostMapping
-    // public ResponseEntity<Object> addTeaches(@RequestBody User user) {
-    //     try {
-    //         userRepository.save(user);
-
-    //         return ResponseEntity.ok("Teaches saved");
-
-    //     } catch (Exception error) {
-    //         return ResponseEntity.badRequest().body("Error of adding User");
-    //     }
-    // }
+    @PostMapping("/post")
+    public ResponseEntity<Object> addUser(@RequestBody User user) {
+        try {
+            return ResponseEntity.ok(userRepository.save(user));
+           
+        } catch (Exception error) {
+            return ResponseEntity.badRequest().body("Error of adding User");
+        }
+    }
     
     @PatchMapping("/patch/teacher/add/{teacherId}/{teachesId}")
     public ResponseEntity<Object> updateTeaches(@PathVariable int teacherId, @PathVariable int teachesId) {
@@ -71,7 +69,7 @@ public class UserController {
 
             Set<Teaches> teachesList = teacher.getTeaches();
             teachesList.add(teaches);
-            // teacher.setTeachesList(teachesList);
+
             return ResponseEntity.ok(userRepository.save(teacher));
 
         } catch (Exception e) {
@@ -91,18 +89,11 @@ public class UserController {
         }
     }
 
-    @PatchMapping("/patch/student/{teacherId}/{takenId}")
-    public ResponseEntity<Object> updateTaken(@PathVariable int studentId, @PathVariable int takenId) {
+    @PutMapping("/put/student/{studentId}/{takenId}")
+    public ResponseEntity<Object> deleteTaken(@PathVariable int studentId, @PathVariable int takenId) {
         try {
             User student = userRepository.findById(studentId).orElse(null);
-            Taken taken = takenRepository.findById(takenId).orElse(null);
-            if (student == null || taken == null) {
-                return ResponseEntity.badRequest().body("User or taken not found");
-            }
-
-            Set<Taken> takenList = student.getTaken();
-            takenList.add(taken);
-
+            student.deleteTaken(takenId);
             return ResponseEntity.ok(userRepository.save(student));
 
         } catch (Exception e) {

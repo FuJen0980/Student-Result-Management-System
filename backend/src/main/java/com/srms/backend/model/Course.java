@@ -1,6 +1,8 @@
 package com.srms.backend.model;
 
 import jakarta.persistence.*;
+
+import java.util.HashSet;
 import java.util.Set;
 import lombok.Builder;
 import lombok.Data;
@@ -16,13 +18,10 @@ public class Course{
     private Integer course_id;
 
     private String courseName;
-
     
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "course")
-    Set<Taken> takenList;
+    // @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "course")
+    // Set<Taken> takenList = new HashSet<Taken>();
     
-
-    //miss a relationship with the studentTaken table 
 
     public Course() {
     }

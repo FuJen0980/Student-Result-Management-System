@@ -39,8 +39,8 @@ function App() {
 
         <UserContext.Provider value = {[user, setUser]}>
           <Routes>
-            <Route path="/test" element={<TestPage />} />
-            <Route path="/" element={<LoginPage />} />
+            <Route path="/" element={<TestPage />} />
+            {/* <Route path="/" element={<LoginPage />} /> */}
             <Route path="/register" element={<RegisterPage />} />
 
             <Route path="/teacher/home" element={<ProtectedRoute element={<TeacherHomePage />} roles={["ADMIN", "TEACHER"]} />} />
