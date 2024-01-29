@@ -11,6 +11,7 @@ import com.srms.backend.model.*;
 
 public interface TakenRepository extends JpaRepository<Taken, Integer> {
     Optional<Taken> findById(Integer Id);
-
+    @Query("select t from Taken t where t.semester = ?1 and t.taken_year = ?2 and t.course = ?3")
+    Optional<Taken> findBySemesterAndTaken_yearAndCourse(String semester, Integer taken_year, Course course);
 
 }

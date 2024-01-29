@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 
 import com.srms.backend.model.User;
 import com.srms.backend.repository.UserRepository;
@@ -24,7 +26,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/api/user")
-@CrossOrigin("*")
+@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
     
     @Autowired
@@ -45,35 +47,17 @@ public class UserController {
         }
     }
 
-    @GetMapping("/all") 
-    public ResponseEntity<Object> getAllUsers() {
+    @PostMapping("/post")
+    public ResponseEntity<Object> addUser(@RequestBody User user) {
         try {
-            return ResponseEntity.ok(userRepository.findAll());
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error");
+            return ResponseEntity.ok(userRepository.save(user));
+           
+        } catch (Exception error) {
+            return ResponseEntity.badRequest().body("Error of adding User");
         }
     }
-
-    @PutMapping("/update/{uid}")
-    public ResponseEntity<Object> updateUser(@PathVariable int uid, @RequestBody User request) {
-        try {
-            User existingUser = userRepository.findById(uid).orElse(null);
-            if(existingUser == null) {
-                return ResponseEntity.badRequest().body("User not found");
-            }
-            existingUser.setName(request.getName());
-            existingUser.setRole(request.getRole());
-            existingUser.setPassword(request.getPassword());
-            userRepository.save(existingUser);
-            return ResponseEntity.ok("User updated");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error Updating User");
-        }
-
-    }
-
-
-    @PutMapping("/put/teacher/{teacherId}/{teachesId}")
+    
+    @PatchMapping("/patch/teacher/add/{teacherId}/{teachesId}")
     public ResponseEntity<Object> updateTeaches(@PathVariable int teacherId, @PathVariable int teachesId) {
         try {
             User teacher = userRepository.findById(teacherId).orElse(null);
@@ -85,7 +69,7 @@ public class UserController {
 
             Set<Teaches> teachesList = teacher.getTeaches();
             teachesList.add(teaches);
-            teacher.setTeachesList(teachesList);
+
             return ResponseEntity.ok(userRepository.save(teacher));
 
         } catch (Exception e) {
@@ -93,18 +77,23 @@ public class UserController {
         }
     }
 
-    @PutMapping("/put/student/{teacherId}/{takenId}")
-    public ResponseEntity<Object> updateTaken(@PathVariable int studentId, @PathVariable int takenId) {
+    @PatchMapping("/patch/teacher/delete/{teacherId}/{teachesId}")
+    public ResponseEntity<Object> deleteTeaches(@PathVariable int teacherId, @PathVariable int teachesId) {
+        try {
+            User teacher = userRepository.findById(teacherId).orElse(null);
+            teacher.deleteTeaches(teachesId);
+            return ResponseEntity.ok(userRepository.save(teacher));
+
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error");
+        }
+    }
+
+    @PutMapping("/put/student/{studentId}/{takenId}")
+    public ResponseEntity<Object> deleteTaken(@PathVariable int studentId, @PathVariable int takenId) {
         try {
             User student = userRepository.findById(studentId).orElse(null);
-            Taken taken = takenRepository.findById(takenId).orElse(null);
-            if (student == null || taken == null) {
-                return ResponseEntity.badRequest().body("User or taken not found");
-            }
-
-            Set<Taken> takenList = student.getTaken();
-            takenList.add(taken);
-            student.setTakenList(takenList);
+            student.deleteTaken(takenId);
             return ResponseEntity.ok(userRepository.save(student));
 
         } catch (Exception e) {

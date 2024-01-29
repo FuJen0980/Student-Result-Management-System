@@ -7,7 +7,7 @@ import UserContext from './user-context.js';
 import { useContext } from 'react';
 import{useState, useEffect} from 'react';
  
-const Teacher_home = () => {
+const Student_home = () => {
     const homepagestyle = {
         backgroundImage: 'url("https://smd-cms.nasa.gov/wp-content/uploads/2023/06/North-star_celestial-pole-1-jpg.webp?w=4096&format=png")',
         backgroundPosition: 'center',
@@ -26,7 +26,7 @@ const Teacher_home = () => {
             setUser(u);
         }
     };
-    
+
     useEffect(() => {
         getUser();
 
@@ -34,6 +34,7 @@ const Teacher_home = () => {
 
     console.log("test");
     console.log(user);
+
 
     const handleLogout = () => {
       // Remove JWT token from local storage
@@ -54,10 +55,10 @@ const Teacher_home = () => {
                 </div>
                 <Row className='offset-4  col-4 justify-content-end'>
                     <div className={`d-grid gap-2 pb-2`}>
-                        <Button className={`btn-primary pd`} size='lg' href='/teacher/input'>Input</Button>
+                        <Button className={`btn-primary pd`} size='lg' href='/student/input'>Input Grade</Button>
                      </div>
                     <div className={`d-grid gap-2 pb-2`}>
-                    <Button className = {`btn-primary`} size = 'lg' href = '/teacher/curve'>Grade</Button>
+                    <Button className = {`btn-primary`} size = 'lg' href = '/student/viewGrade'>View Grade Report</Button>
                     </div>
                     <div className={`d-grid gap-2`}>
                     <Button className = {`btn-primary`} size = 'lg' onClick={handleLogout}>Log Out</Button>
@@ -71,4 +72,4 @@ const Teacher_home = () => {
     );
 }
 
-export default Teacher_home;
+export default Student_home;

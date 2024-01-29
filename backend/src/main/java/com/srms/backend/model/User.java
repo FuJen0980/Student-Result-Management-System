@@ -16,6 +16,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 
 
 @Data
@@ -40,11 +42,10 @@ public class User implements UserDetails{
     )
     private Set<Teaches> teachesList;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(
-        name = "student_id",
-        referencedColumnName = "uid"
-    )
+    @ManyToMany
+    @JoinTable(name = "Student_Taken", 
+    joinColumns = @JoinColumn(name = "StudentId"), 
+    inverseJoinColumns = @JoinColumn(name = "Taken_Id"))
     private Set<Taken> takenList;
 
     @Enumerated(EnumType.STRING)
@@ -79,10 +80,12 @@ public class User implements UserDetails{
         return password;
     }
     
+    @JsonProperty("teachesList")
     public Set<Teaches> getTeaches() {
         return this.teachesList;
     }
 
+    @JsonProperty("takenList")
     public Set<Taken> getTaken() {
         return this.takenList;
     }
@@ -95,13 +98,36 @@ public class User implements UserDetails{
         this.takenList = takenList;
     }
 
-    public void deleteTaken(Optional<Taken> optionalTaken) {
-        optionalTaken.ifPresent(taken -> takenList.remove(taken));
+    public void addTaken(Taken taken) {
+        this.takenList.add(taken);
+      
     }
     
-    public void deleteTeaches(Optional<Teaches> optionalTeaches) {
-        optionalTeaches.ifPresent(teaches -> teachesList.remove(teaches));
+    public void deleteTeaches(int id) {
+        for (Teaches teaches : teachesList) {
+            if (teaches.getTeachesId() == id) {
+                teachesList.remove(teaches);
+                break;
+            }
+        }
+    }
 
+    public void deleteTaken(int id) {
+        for (Taken taken : takenList) {
+            if (taken.getTakenId() == id) {
+                takenList.remove(taken);
+                break;
+            }
+        }
     }
+
+
     
+    public int getCoursesNum() {
+        int res = 0;
+        for (Teaches teaches : teachesList) {
+            res += teaches.getCourses().size();
+        }
+        return res;
+    }
 }

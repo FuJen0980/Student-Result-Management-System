@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,7 +28,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/teaches")
-@CrossOrigin("*")
+@CrossOrigin(origins = "http://localhost:3000")
 public class TeachesController {
     
     @Autowired
@@ -61,7 +62,7 @@ public class TeachesController {
 
     }
 
-    @PutMapping("/put/{teachesId}/{course_Id}")
+    @PatchMapping("/patch/add/{teachesId}/{course_Id}")
     public ResponseEntity<Object> updateTeaches(@PathVariable int teachesId, @PathVariable int course_Id) {
         try {
             Teaches teaches = teachesRepository.findById(teachesId).orElse(null);
@@ -75,23 +76,31 @@ public class TeachesController {
             courseList.add(course);
             teaches.setCourses(courseList);
             teachesRepository.save(teaches);
-        
+
             return ResponseEntity.ok("Teaches update successfully");
+
+        } catch (Exception error) {
+            return ResponseEntity.badRequest().body("Error");
+        }
+    }
+    
+    @PatchMapping("/patch/delete/{teachesId}/{course_Id}")
+    public ResponseEntity<Object> deleteCourseInTeaches(@PathVariable int teachesId, @PathVariable int course_Id) {
+        try {
+            Teaches teaches = teachesRepository.findById(teachesId).orElse(null);
+
+            teaches.removeCourseById(course_Id);
+            teachesRepository.save(teaches);
+            return ResponseEntity.ok(teachesRepository.save(teaches));
             
         } catch (Exception error) {
             return ResponseEntity.badRequest().body("Error");
         }
     }
 
-    @DeleteMapping("/{teachesId}")
-    public ResponseEntity<Object> deleteTeaches(@PathVariable int teachesId,@RequestParam Integer teacherId) {
+    @DeleteMapping("/delete/{teachesId}")
+    public ResponseEntity<Object> deleteTeaches(@PathVariable int teachesId) {
         try {
-            User teacher = userRepository.findById(teacherId).orElse(null);
-            if (teacher != null) {
-                Optional<Teaches> teachesOptional = teachesRepository.findById(teachesId);
-                teacher.deleteTeaches(teachesOptional);
-                userRepository.save(teacher);
-            }
 
             teachesRepository.deleteById(teachesId);
             
