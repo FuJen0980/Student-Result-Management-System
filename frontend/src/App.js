@@ -1,8 +1,8 @@
 import { Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.css';
 
-import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import LoginPage from './pages/LoginPage';
 
 import TeacherHomePage from './pages/TeacherHomePage';
 import TeacherInputPage from './pages/TeacherInputPage';

@@ -2,7 +2,6 @@ package com.srms.backend.model;
 
 import jakarta.persistence.*;
 
-import java.util.List;
 import java.util.Set;
 
 import javax.xml.crypto.dsig.keyinfo.RetrievalMethod;
