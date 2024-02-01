@@ -9,7 +9,8 @@ import TeacherInputPage from './pages/TeacherInputPage';
 import TeacherCurvePage from './pages/TeacherCurvePage';
 import StudentHomePage from './pages/StudentHomePage';
 import StudentInputPage from './pages/StudentInputPage';
-import TestPage from './pages/LoginPageTest';
+import AdminHomePage from './pages/AdminHomePage';
+
 import { Navigate } from 'react-router-dom';
 import { jwtDecode } from "jwt-decode";
 import UserContext from './pages/user-context';
@@ -39,10 +40,10 @@ function App() {
 
         <UserContext.Provider value = {[user, setUser]}>
           <Routes>
-            <Route path="/" element={<TestPage />} />
-            {/* <Route path="/" element={<LoginPage />} /> */}
+            <Route path="/" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
 
+            <Route path="/admin/home" element={<ProtectedRoute element={<AdminHomePage />} roles={["ADMIN"]} />} />
             <Route path="/teacher/home" element={<ProtectedRoute element={<TeacherHomePage />} roles={["ADMIN", "TEACHER"]} />} />
             <Route path="/teacher/input" element={<ProtectedRoute element={<TeacherInputPage />} roles={["ADMIN", "TEACHER"]} />} />
             <Route path="/teacher/curve" element={<ProtectedRoute element={<TeacherCurvePage />} roles={["ADMIN", "TEACHER"]} />} />
