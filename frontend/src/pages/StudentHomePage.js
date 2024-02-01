@@ -58,7 +58,7 @@ const Student_home = () => {
                         <Button className={`btn-primary pd`} size='lg' href='/student/input'>Input Grade</Button>
                      </div>
                     <div className={`d-grid gap-2 pb-2`}>
-                    <Button className = {`btn-primary`} size = 'lg' href = '/student/viewGrade'>View Grade Report</Button>
+                    <Button className = {`btn-primary`} size = 'lg' href = '/student/viewgrade'>View Grade Report</Button>
                     </div>
                     <div className={`d-grid gap-2`}>
                     <Button className = {`btn-primary`} size = 'lg' onClick={handleLogout}>Log Out</Button>
