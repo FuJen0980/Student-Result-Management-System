@@ -9,6 +9,7 @@ import TeacherInputPage from './pages/TeacherInputPage';
 import TeacherCurvePage from './pages/TeacherCurvePage';
 import StudentHomePage from './pages/StudentHomePage';
 import StudentInputPage from './pages/StudentInputPage';
+import StudentViewGradePage from './pages/StudentViewGradePage';
 import AdminHomePage from './pages/AdminHomePage';
 
 import { Navigate } from 'react-router-dom';
@@ -49,6 +50,7 @@ function App() {
             <Route path="/teacher/curve" element={<ProtectedRoute element={<TeacherCurvePage />} roles={["ADMIN", "TEACHER"]} />} />
             <Route path="/student/home" element={<ProtectedRoute element={<StudentHomePage />} roles={["ADMIN", "STUDENT"]} />} />
             <Route path="/student/input" element={<ProtectedRoute element={<StudentInputPage />} roles={["ADMIN", "STUDENT"]} />} />
+            <Route path="/student/viewgrade" element={<ProtectedRoute element={<StudentViewGradePage />} roles={["ADMIN", "STUDENT"]} />} />
         
             </Routes>
         </UserContext.Provider>
