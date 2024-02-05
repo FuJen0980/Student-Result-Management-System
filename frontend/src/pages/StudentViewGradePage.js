@@ -6,16 +6,10 @@ import { useState, useEffect } from 'react';
 import {Button,Row} from 'react-bootstrap';
 import StudentHeader from '../components/StudentHeader.js';
 import AverageGPA from '../components/AverageGPA.js';
+import PageStyle2 from '../components/PageStyle2.js';
 import axios from 'axios';
 
 const StudentViewGradePage = () => {
-    const pagestyle = {
-        backgroundImage: 'url("https://smd-cms.nasa.gov/wp-content/uploads/2023/06/North-star_celestial-pole-1-jpg.webp?w=4096&format=png")',
-        backgroundPosition: 'center',
-        backgroundSize: 'cover',
-        backgroundRepeat: 'no-repeat',
-        height: '100vh'
-    }
 
     const [Taken, setTaken] = useState([]);
     const [user, setUser] = useState(null);
@@ -83,7 +77,7 @@ const StudentViewGradePage = () => {
 
         return (
             <>
-                <main style={pagestyle} className = 'text-center' data-bs-spy="scroll" data-bs-target="#result">
+                <main style={PageStyle2} className = 'text-center' >
                     <StudentHeader />
                     <div id="result" className='text-light text-center py-4'>
                         <h1> {user}'s Transcript</h1>
@@ -115,7 +109,7 @@ const StudentViewGradePage = () => {
                                                 <div className="col">
                                                 {taken.letterGrade}
                                                 </div>
-                                            </div>
+                                         </div>
                                         </div>                                        
                                     </div>
                                 );
@@ -139,11 +133,11 @@ const StudentViewGradePage = () => {
 
                         <div>
                             <p>GPA : {GPA}</p>
-                        </div>          
-
+                        </div>      
+                        
                     </div>
                     
-                    <Button className={`btn-primary`} size='lg' onClick={generatePDF}>Download Transcript</Button>
+                    <Button className={`btn-primary my-4`} size='lg' onClick={generatePDF}>Download Transcript</Button>
                     
                 </main>
             </>
