@@ -9,6 +9,9 @@ import { pagestyle } from '../components/PageStyle.js';
 import { HandleAddTaken } from '../components/HandleAddTaken.js';
 import { HandleDeleteTaken } from '../components/HandleDeleteTaken.js';
 import StudentHeader from '../components/StudentHeader.js';
+import LoadingScreen from '../components/LoadingScreen.js';
+import AverageGPA from '../components/AverageGPA.js';
+import { Button } from 'react-bootstrap';
 import axios from 'axios';
 
 const Student_input = () => {
@@ -17,6 +20,8 @@ const Student_input = () => {
     const [userID, setUserID] = useState(null);
     const [Taken, setTaken] = useState([]);
     const [Courses, setCourses] = useState([]);
+    const [Loading, setLoading] = useState(true);
+    const [GPA, setGPA] = useState(0);
 
     const header = {
         headers: {
@@ -39,13 +44,14 @@ const Student_input = () => {
             const takenList = response.data?.takenList;
             takenList?.sort((a, b) => {
                 if (a.taken_year !== b.taken_year) {
-                    return b.taken_year - a.taken_year;
+                    return a.taken_year - b.taken_year;
                 }
-                return b.semester - a.semester;
+                return a.semester - b.semester;
             })
                 
-                setTaken(takenList)
-                console.log(Taken)
+                setTaken(takenList);
+                setGPA(AverageGPA(takenList));
+
                 
         })
         .catch(error => console.log(error));  
@@ -64,8 +70,16 @@ const Student_input = () => {
         fetchTaken();
         fetchCourses();
 
+        setTimeout(() => {
+            setLoading(false);
+        }, 2000);
+
     }, [])
-    
+
+    if (Loading) {
+        return <LoadingScreen />;
+    }
+
     const addTaken = async (event) => {
         event.preventDefault();
         document.getElementById("alert").style.display = "none";
@@ -76,8 +90,8 @@ const Student_input = () => {
             taken_year: +year.value,
             letterGrade: letterGrade.value,
         }
-        HandleAddTaken(newTeaches, courseName, userID, header, fetchTaken,Courses,LetterGrade,Taken);
-
+        HandleAddTaken(newTeaches, courseName, userID, header, fetchTaken, Courses, LetterGrade, Taken);
+        
     }
 
     return (
@@ -137,24 +151,37 @@ const Student_input = () => {
                                         
                                         <td><FaTrashAlt role="button" tabIndex="0" className="ms-3" onClick={()=>HandleDeleteTaken(taken.takenId,fetchTaken,userID)}/></td>
                                     </tr>  
-                                    ))
-                        ) : (
+                                ))
+
+                            ) : (
                             <tr>
                                 <td colSpan="5" className='text-center'>Table is empty</td>
                             </tr>
 
-                                    
-                        )}
+                            )}
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td className='text-right'>GPA: {GPA}</td>
+                            </tr>
                          </tbody>    
                         
-                        </table>
-                    </div>
+                    </table>
+
+                    {(Taken.length > 0) ? (<Button className={`btn-primary `} size='lg' href='/student/viewgrade'>View Transcript</Button>) : (<p></p>)}
+ 
+                    
+                </div>
+                
         </main>
          <footer className={`bg-black text-white display-6 text-center`} style = {{minHeight: '10vh'}}>
               <div className={`bg-secondary container-fluid p-4 bg-opacity-25`}>
                    <p>Insert {Taken.length} items</p>
             </div>
         </footer> 
+        
 
      </>
         
