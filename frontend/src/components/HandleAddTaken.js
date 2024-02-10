@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const HandleAddTaken = async (taken, courseName, userID, header, fetchTaken, Courses, LetterGrade,Taken) => {
 
-    
+    const API_URL = process.env.REACT_APP_API_URL;
     const showAlert = (alertElem, word) => {
         alertElem.innerHTML = `${word} not exit —check it out!`;
         alertElem.style.display = 'block';
@@ -36,7 +36,7 @@ const HandleAddTaken = async (taken, courseName, userID, header, fetchTaken, Cou
 
     console.log(taken)
 
-    axios.post(`http://localhost:8080/api/taken/post/${courseId}/${userID}`,taken,header)
+    axios.post(`${API_URL}/taken/post/${courseId}/${userID}`,taken,header)
         .then(fetchTaken())
         .catch(error => console.log(error))
         

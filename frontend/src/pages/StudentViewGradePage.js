@@ -10,7 +10,7 @@ import PageStyle2 from '../components/PageStyle2.js';
 import axios from 'axios';
 
 const StudentViewGradePage = () => {
-
+    const API_URL = process.env.REACT_APP_API_URL;
     const [Taken, setTaken] = useState([]);
     const [user, setUser] = useState(null);
     const [userID, setUserID] = useState(null);
@@ -32,7 +32,7 @@ const StudentViewGradePage = () => {
     };
 
     const fetchTaken = () => {
-        axios.get(`http://localhost:8080/api/user/role/${user}`, header)
+        axios.get(`${API_URL}/user/role/${user}`, header)
             .then((response) => {
             
             setUserID(response.data?.uid);

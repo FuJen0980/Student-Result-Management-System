@@ -12,7 +12,7 @@ import { deleteTeaches } from '../components/HandleDeleteTeaches.js';
 import axios from 'axios';
 
 const Teacher_input = () => {
-
+    const API_URL = process.env.REACT_APP_API_URL;
     const [user, setUser] = useContext(UserContext);
     const [userID, setUserID] = useState(null);
     const [Teaches, setTeaches] = useState([]);
@@ -36,7 +36,7 @@ const Teacher_input = () => {
 
     const fetchTeaches = () => {
 
-        axios.get(`http://localhost:8080/api/user/role/${user}`, header)
+        axios.get(`${API_URL}/user/role/${user}`, header)
         .then((response) => {
     
             setUserID(response.data?.uid);
@@ -60,7 +60,7 @@ const Teacher_input = () => {
     }
 
     const fetchCourses = () => {
-        axios.get("http://localhost:8080/api/courses",header)
+        axios.get("${API_URL}/courses",header)
             .then(response => {
                 // console.log(response.data)
                 setCourses(response.data)

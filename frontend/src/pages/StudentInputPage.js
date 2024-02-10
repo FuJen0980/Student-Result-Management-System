@@ -15,6 +15,7 @@ import { Button } from 'react-bootstrap';
 import axios from 'axios';
 
 const Student_input = () => {
+    const API_URL = process.env.REACT_APP_API_URL;
     const [LetterGrade] = useState(['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D', 'F']);
     const [user, setUser] = useContext(UserContext);
     const [userID, setUserID] = useState(null);
@@ -37,7 +38,7 @@ const Student_input = () => {
     };
 
     const fetchTaken = () => {
-        axios.get(`http://localhost:8080/api/user/role/${user}`, header)
+        axios.get(`${API_URL}/user/role/${user}`, header)
             .then((response) => {
             
             setUserID(response.data?.uid);
@@ -58,7 +59,7 @@ const Student_input = () => {
     }
 
     const fetchCourses = () => {
-        axios.get("http://localhost:8080/api/courses",header)
+        axios.get("${API_URL}/courses",header)
             .then(response => {
                 setCourses(response.data)
             })

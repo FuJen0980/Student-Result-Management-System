@@ -1,13 +1,14 @@
 import axios from 'axios';
 
 const deleteTeaches = (teaches, courseId, header,fetchTeaches) => {
+    const API_URL = process.env.REACT_APP_API_URL;
     if (teaches.courses.length <= 1) {
-        axios.delete(`http://localhost:8080/api/teaches/delete/${teaches.teachesId}`,header)
+        axios.delete(`${API_URL}/teaches/delete/${teaches.teachesId}`,header)
             .then(fetchTeaches())
             .catch(error => console.log(error))
             
     } else {
-        fetch(`http://localhost:8080/api/teaches/patch/delete/${teaches.teachesId}/${courseId}`, {
+        fetch(`${API_URL}/teaches/patch/delete/${teaches.teachesId}/${courseId}`, {
             method: "PATCH",
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem("token")}`

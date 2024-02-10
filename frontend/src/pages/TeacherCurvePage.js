@@ -6,7 +6,7 @@ import LoadingScreen from '../components/LoadingScreen.js';
 import { useState, useEffect } from 'react';
 
 const Teacher_curve = () => {
-
+    
     const [Loading, setLoading] = useState(true);
     const [File, setFile] = useState(null);
     const [fileContent, setFileContent] = useState(null);

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const handleAddTeaches = async (teaches, courseName, Courses, Teaches, fetchTeaches, userID,header) => {
-
+    const API_URL = process.env.REACT_APP_API_URL;
     const showAlert = (alertElem, word) => {
         alertElem.innerHTML = `${word} not exit —check it out!`;
         alertElem.style.display = 'block';
@@ -28,7 +28,7 @@ const handleAddTeaches = async (teaches, courseName, Courses, Teaches, fetchTeac
         //allmatch
         if (checkCourse) return;
         //course not exit, add couse to teaches and user
-        fetch(`http://localhost:8080/api/teaches/patch/add/${checkTeaches.teachesId}/${courseId}`, {
+        fetch(`${API_URL}/teaches/patch/add/${checkTeaches.teachesId}/${courseId}`, {
             method: 'PATCH',
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem("token")}`,
@@ -42,16 +42,16 @@ const handleAddTeaches = async (teaches, courseName, Courses, Teaches, fetchTeac
         
     } else {
         //add teach+couse, add teach to user 
-        axios.post('http://localhost:8080/api/teaches',teaches,header) 
+        axios.post('${API_URL}/teaches',teaches,header) 
             .catch(error => console.log(`Error: ${error}`))
         
         let teachesId = null;    
-        axios.get('http://localhost:8080/api/teaches', header)
+        axios.get('${API_URL}/teaches', header)
         .then(response => {
             const teachesList = response.data;
             teachesId = teachesList.find(a => a.courses.length === 0 && a.semester === teaches.semester && a.teachYear === teaches.teachYear).teachesId || null;
 
-            fetch(`http://localhost:8080/api/teaches/patch/add/${teachesId}/${courseId}`, {
+            fetch(`${API_URL}/teaches/patch/add/${teachesId}/${courseId}`, {
                 method: 'PATCH',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem("token")}`,
@@ -59,7 +59,7 @@ const handleAddTeaches = async (teaches, courseName, Courses, Teaches, fetchTeac
             })
             .catch(error => console.log(`Error: ${error}`))
         
-            fetch(`http://localhost:8080/api/user/patch/teacher/add/${userID}/${teachesId}`, {
+            fetch(`${API_URL}/user/patch/teacher/add/${userID}/${teachesId}`, {
                 method: 'PATCH',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem("token")}`,
