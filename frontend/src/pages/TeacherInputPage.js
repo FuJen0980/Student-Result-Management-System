@@ -60,7 +60,7 @@ const Teacher_input = () => {
     }
 
     const fetchCourses = () => {
-        axios.get("${API_URL}/courses",header)
+        axios.get(`${API_URL}/courses`,header)
             .then(response => {
                 // console.log(response.data)
                 setCourses(response.data)
