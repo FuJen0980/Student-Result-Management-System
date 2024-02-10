@@ -28,7 +28,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/teaches")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "https://student-result-management-system-yevx.onrender.com")
 public class TeachesController {
     
     @Autowired

@@ -22,7 +22,7 @@ import java.util.List;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "https://student-result-management-system-yevx.onrender.com")
 @RestController
 @RequestMapping("/api/courses")
 public class CourseController {

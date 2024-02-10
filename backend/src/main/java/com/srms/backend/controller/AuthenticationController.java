@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "https://student-result-management-system-yevx.onrender.com")
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
     

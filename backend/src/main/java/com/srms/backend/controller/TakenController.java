@@ -25,7 +25,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/api/taken")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "https://student-result-management-system-yevx.onrender.com")
 public class TakenController {
     
     @Autowired
